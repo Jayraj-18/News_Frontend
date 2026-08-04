@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   TAILWIND V4 THEME CONFIGURATION
+   ========================================================================== */
+@theme {
+  --font-devanagari: 'Noto Sans Devanagari', 'Hind', sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  --color-primary-red: #C62828;
+  --color-primary-red-hover: #B71C1C;
+  --color-secondary-blue: #1565C0;
+}
+
+/* ==========================================================================
+   BASE STYLES (Scoped so they don't override Tailwind utilities)
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-devanagari);
+    background-color: #f8fafc; /* light slate background */
+    color: #0f172a; /* slate-900 */
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+@media print {
+  header, footer, nav, .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}
