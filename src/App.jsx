@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageContext";
 import { NewsProvider } from "./context/NewsContext";
-import { Header } from "./components/common/Header";
+import { Header } from "./Components/common/Header";
 import { HomePage } from "./Pages/HomePage";
 import { ArticlePage } from "./pages/ArticlePage";
 import { AdminDashboard } from "./Components/admin/AdminDashboard";
