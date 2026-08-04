@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useNews } from '../context/NewsContext';
-import { SEO } from '../components/common/SEO';
-import { ControlsBar } from '../components/article/ControlsBar';
+import { SEO } from '../Components/common/SEO';
+import { ControlsBar } from '../Components/article/ControlsBar';
 
 export const ArticlePage = () => {
   const { lang, t } = useLanguage();
