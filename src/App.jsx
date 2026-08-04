@@ -10,7 +10,7 @@ import { LanguageProvider } from "./context/LanguageContext";
 import { NewsProvider } from "./context/NewsContext";
 import { Header } from "./Components/common/Header";
 import { HomePage } from "./Pages/HomePage";
-import { ArticlePage } from "./pages/ArticlePage";
+import { ArticlePage } from "./Pages/ArticlePage";
 import { AdminDashboard } from "./Components/admin/AdminDashboard";
 import { AdminLogin } from "./Components/admin/AdminLogin";
 import AboutUs from "./Pages/AboutUs";
