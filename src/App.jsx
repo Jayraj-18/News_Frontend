@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -18,10 +18,11 @@ import ContactUs from "./Pages/ContactUs";
 import Disclaimer from "./Pages/Disclaimer";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 
-// Protected Route — shows login if not authenticated
+// Protected Route Guard
 function AdminRoute() {
-  const isAuthenticated = sessionStorage.getItem("admin_authenticated") === "true";
-  const [authed, setAuthed] = React.useState(isAuthenticated);
+  const [authed, setAuthed] = useState(
+    () => sessionStorage.getItem("admin_authenticated") === "true"
+  );
 
   if (!authed) {
     return (
@@ -44,7 +45,6 @@ function AdminRoute() {
   );
 }
 
-// Main shell component handling navigation layout
 function MainContent() {
   const location = useLocation();
   const currentPath = location.pathname;
@@ -64,6 +64,8 @@ function MainContent() {
             path="/article/:id"
             element={<ArticlePage key={currentPath} currentPath={currentPath} />}
           />
+
+          {/* Admin Route */}
           <Route path="/admin" element={<AdminRoute />} />
 
           {/* Static Pages */}
@@ -72,14 +74,14 @@ function MainContent() {
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
 
-          {/* Fallback route for undefined paths */}
+          {/* Fallback */}
           <Route path="*" element={<HomePage currentPath={currentPath} />} />
         </Routes>
       </main>
 
-      {/* Tailwaind Refactored Footer */}
-      <footer className="mt-auto bg-gray-950 text-gray-200 py-10 px-20 border-t-4 border-red-600 dark:border-red-700">
-        <div className="container mx-auto px-20 flex flex-col items-center gap-5 text-center">
+      {/* Footer */}
+      <footer className="mt-auto bg-gray-950 text-gray-200 py-10 px-6 sm:px-20 border-t-4 border-red-600 dark:border-red-700">
+        <div className="container mx-auto flex flex-col items-center gap-5 text-center">
           <div className="space-y-1">
             <strong className="text-xl font-bold text-white block">
               महाराष्ट्र न्यूज 24
@@ -112,10 +114,6 @@ function MainContent() {
             <Link to="/privacy" className="hover:text-red-500 transition-colors">
               गोपनीयता धोरण
             </Link>
-          </nav>
-
-          <nav className="empty:hidden" aria-label="Social Media Links">
-            {/* Reserved for future social icons */}
           </nav>
 
           <p className="text-xs text-gray-400">

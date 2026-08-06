@@ -73,12 +73,7 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                 ? `"${categoryDisplayName}" या वर्गात अद्याप कोणतीही बातमी प्रकाशित करण्यात आलेली नाही. अ‍ॅडमिन पॅनेलवरून नवीन बातमी जोडा किंवा तिचा वर्ग बदला.`
                 : "अजून कोणतीही बातमी प्रकाशित केलेली नाही. अ‍ॅडमिन पॅनेलवरून नवीन बातमी जोडा व प्रकाशित करा."}
             </p>
-            <a
-              href="/admin"
-              className="inline-block bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-md transition-colors text-sm no-underline"
-            >
-              📝 अ‍ॅडमिन पॅनेलवर जा (Go to Admin CMS)
-            </a>
+          
           </div>
         </div>
       ) : (

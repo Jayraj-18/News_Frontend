@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // Credentials — change these to whatever you want
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'news@2026';
+const ADMIN_PASSWORD = 'admin123';
 
 export const AdminLogin = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
