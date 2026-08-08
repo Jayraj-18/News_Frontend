@@ -1,10 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-// ─── API Config ───────────────────────────────────────────────────────────────
-// Reads from VITE_API_BASE_URL in your .env file.
-// Falls back to localhost:5000 for development if the env var is not set.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
+const rawApiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE_URL = rawApiBaseUrl.replace(/\/$/, '');
 const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_SECRET_TOKEN || '';
+
+const buildApiUrl = (path) => {
+  if (API_BASE_URL) {
+    return `${API_BASE_URL}${path}`;
+  }
+  return path;
+};
 
 /** Returns headers for read requests */
 const publicHeaders = { 'Content-Type': 'application/json' };
@@ -28,7 +34,7 @@ export const NewsProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/articles`, {
+      const res = await fetch(buildApiUrl('/api/articles'), {
         headers: publicHeaders,
       });
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
@@ -71,11 +77,13 @@ export const NewsProvider = ({ children }) => {
   // ─── ADD ARTICLE ───────────────────────────────────────────────────────────
   const addArticle = async (newArticle) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/articles`, {
+const res = await fetch(buildApiUrl('/api/articles'), {
         method: 'POST',
         headers: adminHeaders,
         body: JSON.stringify(newArticle),
       });
+
+      console.log('addArticle response status:', res.status);
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.message || 'Failed to create article');
@@ -93,7 +101,7 @@ export const NewsProvider = ({ children }) => {
   // ─── UPDATE ARTICLE ────────────────────────────────────────────────────────
   const updateArticle = async (id, updatedFields) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
+      const res = await fetch(buildApiUrl(`/api/articles/${id}`), {
         method: 'PUT',
         headers: adminHeaders,
         body: JSON.stringify(updatedFields),
@@ -116,7 +124,7 @@ export const NewsProvider = ({ children }) => {
   // ─── DELETE ARTICLE ────────────────────────────────────────────────────────
   const deleteArticle = async (id) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/articles/${id}`, {
+      const res = await fetch(buildApiUrl(`/api/articles/${id}`), {
         method: 'DELETE',
         headers: adminHeaders,
       });
@@ -145,7 +153,7 @@ export const NewsProvider = ({ children }) => {
 
       // Fetch from API
       try {
-        const res = await fetch(`${API_BASE_URL}/api/articles/${identifier}`, {
+        const res = await fetch(buildApiUrl(`/api/articles/${identifier}`), {
           headers: publicHeaders,
         });
         if (!res.ok) return null;
