@@ -1,47 +1,58 @@
-import React from 'react';
+﻿import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+
+const defaultDescription = 'राजकारण, गुन्हेगारी, शेती, क्रीडा आणि स्थानिक घडामोडींच्या ताज्या व अचूक बातम्या.';
+const defaultTitle = 'महाराष्ट्र न्यूज 24 | महाराष्ट्रातील विश्वासार्ह बातमीपत्र';
 
 export const SEO = ({ article, isArticle = false }) => {
   const { lang } = useLanguage();
 
+  const title =
+    article?.title?.[lang] ||
+    article?.title?.mr ||
+    defaultTitle;
+  const description =
+    article?.summary?.[lang] ||
+    article?.summary?.mr ||
+    defaultDescription;
+  const slug = article?.slug || '';
+  const imageUrl = article?.image?.url || `${window.location.origin}/logo.png`;
+  const url = `${window.location.origin}${slug ? `/article/${slug}` : ''}`;
+
   if (!isArticle || !article) {
     return (
       <>
-        <title>महाराष्ट्र न्यूज 24 | महाराष्ट्रातील विश्वासार्ह बातमीपत्र</title>
-        <meta name="description" content="राजकारण, गुन्हेगारी, शेती, क्रीडा आणि स्थानिक घडामोडींच्या ताज्या व अचूक बातम्या." />
+        <title>{defaultTitle}</title>
+        <meta name="description" content={defaultDescription} />
         <link rel="canonical" href={window.location.origin} />
       </>
     );
   }
 
-  const title = article.title[lang] || article.title.mr;
-  const description = article.summary[lang] || article.summary.mr;
-  const url = `${window.location.origin}/article/${article.slug}`;
-
   const schemaData = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": url
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
     },
-    "headline": title,
-    "image": [article.image.url],
-    "datePublished": article.publishedAt,
-    "dateModified": article.updatedAt,
-    "author": {
-      "@type": "Person",
-      "name": article.author.name
+    headline: title,
+    image: [imageUrl],
+    datePublished: article?.publishedAt || new Date().toISOString(),
+    dateModified: article?.updatedAt || article?.publishedAt || new Date().toISOString(),
+    author: {
+      '@type': 'Person',
+      name: article?.author?.name || 'Maharashtra News 24',
     },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Maharashtra News 24",
-      "logo": {
-        "@type": "ImageObject",
-        "url": `${window.location.origin}/logo.png`
-      }
+    publisher: {
+      '@type': 'Organization',
+      name: 'Maharashtra News 24',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${window.location.origin}/logo.png`,
+      },
     },
-    "description": description
+    description,
   };
 
   return (
@@ -54,19 +65,17 @@ export const SEO = ({ article, isArticle = false }) => {
       <meta property="og:type" content="article" />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={article.image.url} />
+      <meta property="og:image" content={imageUrl} />
       <meta property="og:url" content={url} />
 
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={article.image.url} />
+      <meta name="twitter:image" content={imageUrl} />
 
       {/* JSON-LD Schema */}
-      <script type="application/ld+json">
-        {JSON.stringify(schemaData)}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
     </>
   );
 };

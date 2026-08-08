@@ -8,6 +8,8 @@ export const ArticlePage = () => {
   const { lang, t } = useLanguage();
   const { getArticleByIdOrSlug, articles } = useNews();
   
+  const [article, setArticle] = useState(null);
+  const [loadingArticle, setLoadingArticle] = useState(true);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
   const [isDark, setIsDark] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -17,7 +19,31 @@ export const ArticlePage = () => {
   const pathParts = pathname.split('/article/').filter(Boolean);
   const articleIdOrSlug = pathParts[pathParts.length - 1] || '';
 
-  const article = getArticleByIdOrSlug(articleIdOrSlug) || (articles && articles.length > 0 ? articles[0] : null);
+  useEffect(() => {
+    const loadArticle = async () => {
+      setLoadingArticle(true);
+
+      if (!articleIdOrSlug) {
+        setArticle(null);
+        setLoadingArticle(false);
+        return;
+      }
+
+      const fetched = await getArticleByIdOrSlug(articleIdOrSlug);
+      if (fetched) {
+        setArticle(fetched);
+      } else {
+        const fallback = articles.find(
+          (art) => String(art.id) === String(articleIdOrSlug) || art.slug === articleIdOrSlug
+        );
+        setArticle(fallback || null);
+      }
+
+      setLoadingArticle(false);
+    };
+
+    loadArticle();
+  }, [articleIdOrSlug, articles, getArticleByIdOrSlug]);
 
   // Scroll Progress calculation
   useEffect(() => {
@@ -59,18 +85,29 @@ export const ArticlePage = () => {
     );
   }
 
-  const articleTitle = article.titleMr || (typeof article.title === 'object' ? (article.title[lang] || article.title.mr) : article.title) || 'शीर्षक नाही';
-  const articleSummary = article.summaryMr || (typeof article.summary === 'object' ? (article.summary[lang] || article.summary.mr) : article.summary) || '';
-  const articleContent = article.contentMr || (typeof article.content === 'object' ? (article.content[lang] || article.content.mr) : article.content) || '';
-  const imageUrl = article.featuredImage?.url || article.image?.url || '';
-  const imageCaption = article.featuredImage?.caption || article.image?.caption || '';
-  const imageCredit = article.featuredImage?.credit || article.image?.credit || '';
-  const authorName = article.author?.name || 'महाराष्ट्र न्यूज 24';
-  const authorRole = article.author?.role || 'संपादक';
-  const authorAvatar = article.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop';
-  const publishedDate = article.publishedAt || article.createdAt || new Date().toISOString();
-  const readingTime = article.readingTime || 2;
-  const galleryImages = article.galleryImages || [];
+  const articleTitle = article?.titleMr || (typeof article?.title === 'object' ? (article.title?.[lang] || article.title?.mr) : article?.title) || 'शीर्षक नाही';
+  const articleSummary = article?.summaryMr || (typeof article?.summary === 'object' ? (article.summary?.[lang] || article.summary?.mr) : article?.summary) || '';
+  const articleContent = article?.contentMr || (typeof article?.content === 'object' ? (article.content?.[lang] || article.content?.mr) : article?.content) || '';
+  const imageUrl = article?.featuredImage?.url || article?.image?.url || '';
+  const imageCaption = article?.featuredImage?.caption || article?.image?.caption || '';
+  const imageCredit = article?.featuredImage?.credit || article?.image?.credit || '';
+  const authorName = article?.author?.name || 'महाराष्ट्र न्यूज 24';
+  const authorRole = article?.author?.role || 'संपादक';
+  const authorAvatar = article?.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop';
+  const publishedDate = article?.publishedAt || article?.createdAt || new Date().toISOString();
+  const readingTime = article?.readingTime || 2;
+  const galleryImages = article?.galleryImages || [];
+
+  if (loadingArticle) {
+    return (
+      <div className="container mx-auto px-4 py-20 text-center">
+        <div className="inline-flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-lg shadow-sm">
+          <div className="animate-spin rounded-full h-8 w-8 border-4 border-red-600 border-t-transparent"></div>
+          <span className="text-gray-800 dark:text-gray-100">बातमी लोड केली जात आहे...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
