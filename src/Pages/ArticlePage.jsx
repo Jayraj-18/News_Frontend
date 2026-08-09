@@ -234,12 +234,7 @@ export const ArticlePage = () => {
         >
           Facebook
         </button>
-        <button 
-          className="w-full py-2 px-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded text-sm transition-colors cursor-pointer border border-zinc-700"
-          onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(articleTitle)}&url=${encodeURIComponent(window.location.href)}`)}
-        >
-          X (Twitter)
-        </button>
+       
       </div>
     </div>
 
