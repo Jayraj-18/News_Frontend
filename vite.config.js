@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
+    darkMode: 'class',
     plugins: [
       react(),
       tailwindcss(),

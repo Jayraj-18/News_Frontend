@@ -17,6 +17,8 @@ import AboutUs from "./Pages/AboutUs";
 import ContactUs from "./Pages/ContactUs";
 import Disclaimer from "./Pages/Disclaimer";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import "./index.css"; // Import Tailwind CSS
+
 
 // Protected Route Guard
 function AdminRoute() {
@@ -84,7 +86,7 @@ function MainContent() {
         <div className="container mx-auto flex flex-col items-center gap-5 text-center">
           <div className="space-y-1">
             <strong className="text-xl font-bold text-white block">
-              महाराष्ट्र न्यूज 24
+              पालघर दृष्टी
             </strong>
             <p className="text-sm text-gray-400">
               निष्पक्ष, निर्भीड आणि लोकाभिमुख पत्रकारिता.
@@ -117,7 +119,7 @@ function MainContent() {
           </nav>
 
           <p className="text-xs text-gray-400">
-            © 2026 Maharashtra News 24. All rights reserved.
+            © 2026 पालघर दृष्टी. All rights reserved.
           </p>
         </div>
       </footer>

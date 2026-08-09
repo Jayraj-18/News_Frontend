@@ -2,7 +2,7 @@
 import { useLanguage } from '../../context/LanguageContext';
 
 const defaultDescription = 'राजकारण, गुन्हेगारी, शेती, क्रीडा आणि स्थानिक घडामोडींच्या ताज्या व अचूक बातम्या.';
-const defaultTitle = 'महाराष्ट्र न्यूज 24 | महाराष्ट्रातील विश्वासार्ह बातमीपत्र';
+const defaultTitle = 'पालघर दृष्टी | महाराष्ट्रातील विश्वासार्ह बातमीपत्र';
 
 export const SEO = ({ article, isArticle = false }) => {
   const { lang } = useLanguage();
@@ -57,7 +57,7 @@ export const SEO = ({ article, isArticle = false }) => {
 
   return (
     <>
-      <title>{`${title} | महाराष्ट्र न्यूज 24`}</title>
+      <title>{`${title} | पालघर दृष्टी`}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
 

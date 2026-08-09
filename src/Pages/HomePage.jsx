@@ -1,6 +1,7 @@
 import React from "react";
 import { useNews } from "../context/NewsContext";
 import { useLanguage } from "../context/LanguageContext";
+import { Link } from "react-router-dom";
 
 export const HomePage = ({ currentPath = window.location.pathname }) => {
   const { articles = [] } = useNews();
@@ -49,11 +50,14 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
           <span className="inline-block bg-red-600 text-white text-xs font-bold uppercase px-2.5 py-1 rounded mb-2">
             {categoryDisplayName}
           </span>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+          <h1 className="text-3xl font-bold text-gray-900  mb-1">
             {categoryDisplayName} बातम्या
           </h1>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             या विभागातील सर्व ताजी अपडेट्स व विशेष बातम्या.
+            <Link to="/" className="text-red-600 hover:underline">
+              अधिक बातम्या
+            </Link>
           </p>
         </div>
       )}
@@ -73,7 +77,9 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                 ? `"${categoryDisplayName}" या वर्गात अद्याप कोणतीही बातमी प्रकाशित करण्यात आलेली नाही. अ‍ॅडमिन पॅनेलवरून नवीन बातमी जोडा किंवा तिचा वर्ग बदला.`
                 : "अजून कोणतीही बातमी प्रकाशित केलेली नाही. अ‍ॅडमिन पॅनेलवरून नवीन बातमी जोडा व प्रकाशित करा."}
             </p>
-          
+             <Link to="/" className="text-red-600 hover:underline bg-white p-5 font-bold rounded-2xl">
+              अधिक बातम्या
+            </Link>
           </div>
         </div>
       ) : (

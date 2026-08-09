@@ -36,7 +36,7 @@ export const AdminLogin = ({ onLoginSuccess }) => {
         <div className="text-center mb-6">
           <span className="text-4xl block mb-2">📰</span>
           <h1 className="text-2xl font-extrabold text-red-600 m-0">
-            महाराष्ट्र न्यूज 24
+            पालघर दृष्टी
           </h1>
           <p className="text-xs text-gray-500 mt-1">
             पत्रकार सीएमएस (Journalist CMS)

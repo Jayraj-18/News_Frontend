@@ -1,9 +1,9 @@
 export const translations = {
   mr: {
-    siteTitle: "महाराष्ट्र न्यूज 24",
+    siteTitle: "पालघर दृष्टी",
     tagline: "विश्वासार्हता, अचूकता आणि पारदर्शकता",
     breaking: "महत्त्वाच्या बातम्या",
-    latest: "ताजा बातम्या",
+    latest: "ताज्या बातम्या",
     trending: "ट्रेडिंग बातम्या",
     opinion: "मत व विश्लेषण",
     photos: "छायाचित्र दालन",
@@ -11,7 +11,7 @@ export const translations = {
     readMore: "सविस्तर वाचा",
     minRead: "मि. वाचन",
     publishedOn: "प्रसिद्धी:",
-    updatedOn: "अद्यतन:",
+    updatedOn: "अद्ययावत:",
     author: "लेखक:",
     shareArticle: "शेअर करा:",
     toc: "अनुक्रमणिका",
@@ -35,7 +35,7 @@ export const translations = {
     }
   },
   en: {
-    siteTitle: "Maharashtra News 24",
+    siteTitle: "Palghar Drushti", // Updated from "Maharashtra News 24"
     tagline: "Trustworthiness, Accuracy and Transparency",
     breaking: "Breaking News",
     latest: "Latest News",
@@ -43,7 +43,6 @@ export const translations = {
     opinion: "Opinion & Editorials",
     photos: "Photo Gallery",
     videos: "Video Stories",
-
     readMore: "Read Full Story",
     minRead: "min read",
     publishedOn: "Published:",
@@ -70,4 +69,4 @@ export const translations = {
       world: "World"
     }
   }
-};
+} 

@@ -183,7 +183,7 @@ export const AdminDashboard = ({ onLogout }) => {
       galleryImages: galleryImages || [],
       tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       author: {
-        name: "महाराष्ट्र न्यूज 24",
+        name: "पालघर दृष्टी",
         role: "संपादक टीम",
         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
       },

@@ -11,7 +11,6 @@ export const ArticlePage = () => {
   const [article, setArticle] = useState(null);
   const [loadingArticle, setLoadingArticle] = useState(true);
   const [fontSizeOffset, setFontSizeOffset] = useState(0);
-  const [isDark, setIsDark] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   // Extract ID or Slug from pathname e.g. /article/1722176400000 or /article/my-slug
@@ -56,22 +55,26 @@ export const ArticlePage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleFontChange = (delta) => {
-    setFontSizeOffset((prev) => Math.min(Math.max(prev + delta, -2), 4));
-  };
+ 
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark', !isDark);
-  };
+  if (loadingArticle) {
+    return (
+      <div className="min-h-screen bg-[#1E2939] text-white flex items-center justify-center p-4">
+        <div className="inline-flex items-center gap-3 bg-zinc-900 border border-zinc-800 p-8 rounded-lg shadow-sm">
+          <div className="animate-spin rounded-full h-8 w-8 border-4 border-red-600 border-t-transparent"></div>
+          <span className="text-white font-medium">बातमी लोड केली जात आहे...</span>
+        </div>
+      </div>
+    );
+  }
 
   if (!article) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
-        <div className="bg-white dark:bg-gray-800 p-8 sm:p-12 rounded-lg border border-gray-200 dark:border-gray-700 max-w-lg mx-auto shadow-sm">
+      <div className="min-h-screen bg-#1E2939 text-white flex items-center justify-center p-4">
+        <div className="bg-zinc-900 p-8 sm:p-12 rounded-lg border border-zinc-800 max-w-lg mx-auto shadow-sm text-center">
           <span className="text-5xl block">📰</span>
-          <h2 className="mt-4 text-2xl font-bold text-gray-900 dark:text-gray-100">बातमी सापडली नाही</h2>
-          <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm leading-relaxed">
+          <h2 className="mt-4 text-2xl font-bold text-white">बातमी सापडली नाही</h2>
+          <p className="text-zinc-400 mt-2 text-sm leading-relaxed">
             तुम्ही शोधत असलेली बातमी उपलब्ध नाही किंवा ती अजून प्रकाशित झालेली नाही.
           </p>
           <a
@@ -91,31 +94,20 @@ export const ArticlePage = () => {
   const imageUrl = article?.featuredImage?.url || article?.image?.url || '';
   const imageCaption = article?.featuredImage?.caption || article?.image?.caption || '';
   const imageCredit = article?.featuredImage?.credit || article?.image?.credit || '';
-  const authorName = article?.author?.name || 'महाराष्ट्र न्यूज 24';
-  const authorRole = article?.author?.role || 'संपादक';
+  const authorName =  'पालघर दृष्टी';
+  const authorRole = article?.author?.role || 'Sampadak (Editor)';
   const authorAvatar = article?.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop';
   const publishedDate = article?.publishedAt || article?.createdAt || new Date().toISOString();
-  const readingTime = article?.readingTime || 2;
+  const readingTime =  7;
   const galleryImages = article?.galleryImages || [];
 
-  if (loadingArticle) {
-    return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-lg shadow-sm">
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-red-600 border-t-transparent"></div>
-          <span className="text-gray-800 dark:text-gray-100">बातमी लोड केली जात आहे...</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <>
+    <div className="min-h-screen bg-[#1E2939] text-white py-1">
       <SEO article={article} isArticle={true} />
 
       {/* Reading Progress Indicator */}
       <div 
-        className="fixed top-0 left-0 h-1 px-20 bg-red-600 z-50 transition-all duration-100 ease-out" 
+        className="fixed top-0 left-0 h-1 bg-red-600 z-50 transition-all duration-100 ease-out" 
         style={{ width: `${scrollProgress}%` }}
         role="progressbar"
         aria-valuenow={scrollProgress}
@@ -124,13 +116,13 @@ export const ArticlePage = () => {
       />
 
       <article 
-        className="container mx-auto px-4 max-w-[1100px] my-8 transition-all"
+        className="container mx-auto px-4 max-w-[1100px] my-8 text-white"
         style={{ fontSize: `${18 + fontSizeOffset}px` }}
       >
         {/* Breadcrumb Navigation */}
-        <nav className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-4 print:hidden" aria-label="Breadcrumb">
-          <a href="/" className="hover:underline">मुख्य पृष्ठ</a> &gt; {article.category && (
-            <a href={`/category/${article.category}`} className="hover:underline">
+        <nav className="text-xs sm:text-sm text-zinc-400 mb-4 print:hidden" aria-label="Breadcrumb">
+          <a href="/" className="hover:underline hover:text-white">मुख्य पृष्ठ</a> &gt; {article.category && (
+            <a href={`/category/${article.category}`} className="hover:underline hover:text-white ml-1">
               {t(`categories.${article.category}`) || article.category}
             </a>
           )}
@@ -143,39 +135,35 @@ export const ArticlePage = () => {
               {t(`categories.${article.category}`) || article.category}
             </span>
           )}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-gray-100 leading-tight mt-2 mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mt-2 mb-4">
             {articleTitle}
           </h1>
           {articleSummary && (
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
+            <p className="text-lg sm:text-xl text-zinc-300 leading-relaxed mb-6">
               {articleSummary}
             </p>
           )}
 
           {/* Meta Information Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-y border-gray-200 dark:border-gray-700 py-4 my-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-y border-zinc-800 py-4 my-6">
             <div className="flex items-center gap-3">
-              <img src={authorAvatar} alt={authorName} className="w-11 h-11 rounded-full object-cover" loading="lazy" />
+              <img src={authorAvatar} alt={authorName} className="w-11 h-11 rounded-full object-cover border border-zinc-700" loading="lazy" />
               <div>
-                <strong className="block text-sm font-bold text-gray-900 dark:text-gray-100">{authorName}</strong>
-                <span className="text-xs text-gray-500 dark:text-gray-400">{authorRole}</span>
+                <strong className="block text-sm font-bold text-white">{authorName}</strong>
+                <span className="text-xs text-zinc-400">{authorRole}</span>
               </div>
             </div>
 
-            <div className="flex flex-col sm:items-end text-xs text-gray-500 dark:text-gray-400 gap-1">
+            <div className="flex flex-col sm:items-end text-xs text-zinc-400 gap-1">
               <time dateTime={publishedDate}>
                 {t('publishedOn')} {new Date(publishedDate).toLocaleDateString(lang === 'mr' ? 'mr-IN' : 'en-US')}
               </time>
-              <span className="font-medium">⏳ {readingTime} {t('minRead')}</span>
+              <span className="font-medium text-zinc-300">⏳ {readingTime} {t('minRead')}</span>
             </div>
           </div>
         </header>
 
-        <ControlsBar 
-          onFontChange={handleFontChange} 
-          onToggleTheme={toggleTheme} 
-          isDark={isDark} 
-        />
+      
 
         {/* Featured Hero Image */}
         {imageUrl && (
@@ -186,12 +174,12 @@ export const ArticlePage = () => {
               width="1200" 
               height="675"
               loading="eager"
-              className="w-full rounded-md object-cover aspect-video"
+              className="w-full rounded-md object-cover aspect-video border border-zinc-800"
             />
             {(imageCaption || imageCredit) && (
-              <figcaption className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mt-2 px-1">
+              <figcaption className="flex justify-between items-center text-xs text-zinc-400 mt-2 px-1">
                 <span>{imageCaption}</span>
-                {imageCredit && <span className="font-semibold">{imageCredit}</span>}
+                {imageCredit && <span className="font-semibold text-zinc-300">{imageCredit}</span>}
               </figcaption>
             )}
           </figure>
@@ -201,21 +189,21 @@ export const ArticlePage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
           
           {/* Article Text Content */}
-          <main className="leading-relaxed text-gray-800 dark:text-gray-200 [&>p]:mb-6 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:border-b-2 [&>h2]:border-gray-100 [&>h2]:dark:border-gray-800 [&>h2]:pb-2">
+          <main className="leading-relaxed text-zinc-200 [&>p]:mb-6 [&>p]:text-zinc-200 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:border-b-2 [&>h2]:border-zinc-800 [&>h2]:pb-2 [&>h2]:text-white [&>a]:text-red-500">
             <div dangerouslySetInnerHTML={{ __html: articleContent }} />
 
             {/* Gallery Images if attached */}
             {galleryImages.length > 0 && (
-              <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-xl font-bold mb-4 border-l-4 border-red-600 pl-2 text-gray-900 dark:text-gray-100">
+              <div className="mt-10 pt-6 border-t border-zinc-800">
+                <h3 className="text-xl font-bold mb-4 border-l-4 border-red-600 pl-2 text-white">
                   📸 फोटो गॅलरी (Gallery)
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {galleryImages.map((gImg, idx) => (
-                    <figure key={gImg.id || idx} className="m-0 border border-gray-200 dark:border-gray-700 rounded overflow-hidden bg-gray-50 dark:bg-gray-800">
+                    <figure key={gImg.id || idx} className="m-0 border border-zinc-800 rounded overflow-hidden bg-zinc-900">
                       <img src={gImg.url} alt={gImg.caption || 'Gallery Image'} className="w-full h-44 object-cover" />
                       {gImg.caption && (
-                        <figcaption className="p-2 text-xs text-gray-600 dark:text-gray-400">
+                        <figcaption className="p-2 text-xs text-zinc-300">
                           {gImg.caption}
                         </figcaption>
                       )}
@@ -227,53 +215,53 @@ export const ArticlePage = () => {
           </main>
 
           {/* Sticky Contextual Sidebar */}
-          <aside className="hidden lg:block print:hidden">
-            <div className="sticky top-6 flex flex-col gap-6">
-              <div>
-                <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">
-                  {t('shareArticle')}
-                </h3>
-                <div className="flex flex-col gap-2">
-                  <button 
-                    className="w-full py-2 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded text-sm transition-colors cursor-pointer"
-                    onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(articleTitle + ' ' + window.location.href)}`)}
-                  >
-                    WhatsApp
-                  </button>
-                  <button 
-                    className="w-full py-2 px-4 bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold rounded text-sm transition-colors cursor-pointer"
-                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`)}
-                  >
-                    Facebook
-                  </button>
-                  <button 
-                    className="w-full py-2 px-4 bg-black hover:bg-gray-900 text-white font-bold rounded text-sm transition-colors cursor-pointer dark:border dark:border-gray-700"
-                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(articleTitle)}&url=${encodeURIComponent(window.location.href)}`)}
-                  >
-                    X (Twitter)
-                  </button>
-                </div>
-              </div>
+         <aside className="block print:hidden">
+  <div className="lg:sticky lg:top-6 flex flex-col gap-6">
+    <div>
+      <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-3">
+        {t('shareArticle')}
+      </h3>
+      <div className="flex flex-col sm:flex-row lg:flex-col gap-2">
+        <button 
+          className="w-full py-2 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded text-sm transition-colors cursor-pointer"
+          onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(articleTitle + ' ' + window.location.href)}`)}
+        >
+          WhatsApp
+        </button>
+        <button 
+          className="w-full py-2 px-4 bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold rounded text-sm transition-colors cursor-pointer"
+          onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`)}
+        >
+          Facebook
+        </button>
+        <button 
+          className="w-full py-2 px-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded text-sm transition-colors cursor-pointer border border-zinc-700"
+          onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(articleTitle)}&url=${encodeURIComponent(window.location.href)}`)}
+        >
+          X (Twitter)
+        </button>
+      </div>
+    </div>
 
-              {/* Advertisement Placeholder */}
-              <div className="h-64 bg-gray-100 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center text-xs text-gray-400 dark:text-gray-500 rounded">
-                <span>जाहिरात (Advertisement)</span>
-              </div>
-            </div>
-          </aside>
+    {/* Advertisement Placeholder */}
+    <div className="h-64 bg-zinc-900 border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500 rounded">
+      <span>जाहिरात (Advertisement)</span>
+    </div>
+  </div>
+</aside>
         </div>
 
         {/* Author Bio Section */}
-        <section className="flex items-center gap-4 bg-gray-50 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 p-6 rounded-lg mt-12">
-          <img src={authorAvatar} alt={authorName} className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shrink-0" />
+        <section className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 p-6 rounded-lg mt-12">
+          <img src={authorAvatar} alt={authorName} className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shrink-0 border border-zinc-700" />
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">{authorName}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+            <h3 className="text-lg font-bold text-white mb-1">{authorName}</h3>
+            <p className="text-sm text-zinc-300 leading-relaxed">
               {authorRole} - निष्पक्ष, निर्भीड आणि लोकाभिमुख पत्रकारिता.
             </p>
           </div>
         </section>
       </article>
-    </>
+    </div>
   );
 };
