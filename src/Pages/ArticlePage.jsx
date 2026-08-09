@@ -55,8 +55,6 @@ export const ArticlePage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
- 
-
   if (loadingArticle) {
     return (
       <div className="min-h-screen bg-[#1E2939] text-white flex items-center justify-center p-4">
@@ -70,7 +68,7 @@ export const ArticlePage = () => {
 
   if (!article) {
     return (
-      <div className="min-h-screen bg-#1E2939 text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#1E2939] text-white flex items-center justify-center p-4">
         <div className="bg-zinc-900 p-8 sm:p-12 rounded-lg border border-zinc-800 max-w-lg mx-auto shadow-sm text-center">
           <span className="text-5xl block">📰</span>
           <h2 className="mt-4 text-2xl font-bold text-white">बातमी सापडली नाही</h2>
@@ -94,11 +92,14 @@ export const ArticlePage = () => {
   const imageUrl = article?.featuredImage?.url || article?.image?.url || '';
   const imageCaption = article?.featuredImage?.caption || article?.image?.caption || '';
   const imageCredit = article?.featuredImage?.credit || article?.image?.credit || '';
-  const authorName =  'पालघर दृष्टी';
+  const authorName = 'पालघर दृष्टी';
   const authorRole = article?.author?.role || 'Sampadak (Editor)';
-  const authorAvatar = article?.author?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop';
+  
+  // Set /one.webp from the public folder as default when article avatar isn't specified
+  const authorAvatar = article?.author?.avatar || '/one.webp';
+  
   const publishedDate = article?.publishedAt || article?.createdAt || new Date().toISOString();
-  const readingTime =  7;
+  const readingTime = 7;
   const galleryImages = article?.galleryImages || [];
 
   return (
@@ -147,7 +148,12 @@ export const ArticlePage = () => {
           {/* Meta Information Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-y border-zinc-800 py-4 my-6">
             <div className="flex items-center gap-3">
-              <img src={authorAvatar} alt={authorName} className="w-11 h-11 rounded-full object-cover border border-zinc-700" loading="lazy" />
+              <img 
+                src={authorAvatar} 
+                alt={authorName} 
+                className="w-11 h-11 rounded-full object-cover border border-zinc-700" 
+                loading="lazy" 
+              />
               <div>
                 <strong className="block text-sm font-bold text-white">{authorName}</strong>
                 <span className="text-xs text-zinc-400">{authorRole}</span>
@@ -162,8 +168,6 @@ export const ArticlePage = () => {
             </div>
           </div>
         </header>
-
-      
 
         {/* Featured Hero Image */}
         {imageUrl && (
@@ -215,40 +219,43 @@ export const ArticlePage = () => {
           </main>
 
           {/* Sticky Contextual Sidebar */}
-         <aside className="block print:hidden">
-  <div className="lg:sticky lg:top-6 flex flex-col gap-6">
-    <div>
-      <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-3">
-        {t('shareArticle')}
-      </h3>
-      <div className="flex flex-col sm:flex-row lg:flex-col gap-2">
-        <button 
-          className="w-full py-2 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded text-sm transition-colors cursor-pointer"
-          onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(articleTitle + ' ' + window.location.href)}`)}
-        >
-          WhatsApp
-        </button>
-        <button 
-          className="w-full py-2 px-4 bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold rounded text-sm transition-colors cursor-pointer"
-          onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`)}
-        >
-          Facebook
-        </button>
-       
-      </div>
-    </div>
+          <aside className="block print:hidden">
+            <div className="lg:sticky lg:top-6 flex flex-col gap-6">
+              <div>
+                <h3 className="text-sm font-bold uppercase tracking-wider text-zinc-400 mb-3">
+                  {t('shareArticle')}
+                </h3>
+                <div className="flex flex-col sm:flex-row lg:flex-col gap-2">
+                  <button 
+                    className="w-full py-2 px-4 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold rounded text-sm transition-colors cursor-pointer"
+                    onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(articleTitle + ' ' + window.location.href)}`)}
+                  >
+                    WhatsApp
+                  </button>
+                  <button 
+                    className="w-full py-2 px-4 bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold rounded text-sm transition-colors cursor-pointer"
+                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`)}
+                  >
+                    Facebook
+                  </button>
+                </div>
+              </div>
 
-    {/* Advertisement Placeholder */}
-    <div className="h-64 bg-zinc-900 border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500 rounded">
-      <span>जाहिरात (Advertisement)</span>
-    </div>
-  </div>
-</aside>
+              {/* Advertisement Placeholder */}
+              <div className="h-64 bg-zinc-900 border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500 rounded">
+                <span>जाहिरात (Advertisement)</span>
+              </div>
+            </div>
+          </aside>
         </div>
 
         {/* Author Bio Section */}
         <section className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 p-6 rounded-lg mt-12">
-          <img src={authorAvatar} alt={authorName} className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shrink-0 border border-zinc-700" />
+          <img 
+            src={authorAvatar} 
+            alt={authorName} 
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shrink-0 border border-zinc-700" 
+          />
           <div>
             <h3 className="text-lg font-bold text-white mb-1">{authorName}</h3>
             <p className="text-sm text-zinc-300 leading-relaxed">
