@@ -2,7 +2,7 @@ import React from 'react';
 import { Lock, Cookie, ShieldAlert, Eye } from 'lucide-react';
 
 export default function PrivacyPolicy() {
-  const siteName = "News Police Reporter";
+  const siteName = "पालघर दृष्टी";
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
