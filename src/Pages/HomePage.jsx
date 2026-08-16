@@ -3,8 +3,21 @@ import { useNews } from "../context/NewsContext";
 import { useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router-dom";
 
+// ─── Skeleton card shown while articles are loading ────────────────────────
+const SkeletonCard = () => (
+  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden flex flex-col animate-pulse">
+    <div className="aspect-video bg-gray-200 dark:bg-gray-700" />
+    <div className="p-4 flex flex-col gap-3">
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full" />
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6" />
+      <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mt-2" />
+    </div>
+  </div>
+);
+
 export const HomePage = ({ currentPath = window.location.pathname }) => {
-  const { articles = [] } = useNews();
+  const { articles = [], loading } = useNews();
   const { t } = useLanguage();
 
   // 1. Extract and normalize selected category from route
@@ -41,6 +54,19 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
   const categoryDisplayName = selectedCategory
     ? t(`categories.${selectedCategory}`) || selectedCategory
     : null;
+
+  // Show skeleton grid when loading and there is no cached data yet
+  if (loading && articles.length === 0) {
+    return (
+      <div className="container mx-auto px-4 mt-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 mt-6 mb-12">
@@ -95,6 +121,8 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                   <img
                     src={heroArticle.featuredImage?.url || heroArticle.image?.url}
                     alt={heroArticle.titleMr || heroArticle.title?.mr}
+                    fetchpriority="high"
+                    loading="eager"
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 )}
