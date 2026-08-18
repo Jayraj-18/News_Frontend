@@ -205,7 +205,7 @@ export const ArticlePage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {galleryImages.map((gImg, idx) => (
                     <figure key={gImg.id || idx} className="m-0 border border-zinc-800 rounded overflow-hidden bg-zinc-900">
-                      <img src={gImg.url} alt={gImg.caption || 'Gallery Image'} className="w-full h-44 object-cover" />
+                      <img src={gImg.url} alt={gImg.caption || 'Gallery Image'} className="w-full h-44 object-cover" fetchpriority="high" loading="eager" />
                       {gImg.caption && (
                         <figcaption className="p-2 text-xs text-zinc-300">
                           {gImg.caption}
