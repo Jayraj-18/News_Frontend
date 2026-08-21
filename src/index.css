@@ -7,16 +7,30 @@
    TAILWIND V4 THEME CONFIGURATION
    ========================================================================== */
 @theme {
-  --font-devanagari: 'Noto Sans Devanagari', 'Hind', sans-serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  
-  --color-primary-red: #C62828;
+  /*
+   * Font stacks — three Devanagari families + Inter for latin UI.
+   *
+   * Role assignments:
+   *   --font-devanagari  → body text, nav, captions  (Noto Sans Devanagari)
+   *   --font-display     → article headings / hero    (Tiro Devanagari Marathi)
+   *   --font-mukta       → secondary copy, meta, tags (Mukta)
+   *   --font-sans        → latin/numeric UI labels    (Inter)
+   *
+   * System-font fallbacks ensure text is visible on slow connections
+   * even before the remote fonts arrive (avoids CLS / FOIT impact).
+   */
+  --font-devanagari : 'Noto Sans Devanagari', 'Mukta', sans-serif;
+  --font-display    : 'Tiro Devanagari Marathi', 'Noto Sans Devanagari', serif;
+  --font-mukta      : 'Mukta', 'Noto Sans Devanagari', sans-serif;
+  --font-sans       : 'Inter', system-ui, -apple-system, sans-serif;
+
+  --color-primary-red      : #C62828;
   --color-primary-red-hover: #B71C1C;
-  --color-secondary-blue: #1565C0;
+  --color-secondary-blue   : #1565C0;
 }
 
 /* ==========================================================================
-   BASE STYLES (Scoped so they don't override Tailwind utilities)
+   BASE STYLES
    ========================================================================== */
 @layer base {
   html {
@@ -24,13 +38,40 @@
   }
 
   body {
+    /* Noto Sans Devanagari as primary body font — excellent Marathi coverage */
     font-family: var(--font-devanagari);
-    background-color:#0f172a; /* light slate background */
-    color: #f8fafc ; /* slate-900 */
+    background-color: #0f172a;
+    color: #f8fafc;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /*
+   * Headings use Tiro Devanagari Marathi — the traditional Marathi display face.
+   * font-display: optional means the browser won't wait for it if it's slow.
+   * The Noto fallback kicks in instantly, so LCP is never delayed.
+   */
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
+
+  /* Meta text, dates, tags, captions → Mukta (compact, clean) */
+  time, figcaption, caption, .meta-text {
+    font-family: var(--font-mukta);
   }
 }
+
+/* Utility class: apply Tiro Devanagari Marathi to any element */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Utility class: apply Mukta to any element */
+.font-mukta {
+  font-family: var(--font-mukta);
+}
+
 
 /* ==========================================================================
    PRINT STYLES

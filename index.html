@@ -4,22 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#C62828" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ═══ FONT PERFORMANCE: preconnect early ═══════════════════════════════
+         Two unique preconnect hints (remove duplicates from old code).
+         crossorigin is required on fonts.gstatic.com so the CORS preflight
+         is cached before the font files are fetched.                       -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- ═══ FONT PERFORMANCE: async non-render-blocking load ════════════════
+         Strategy: media="print" + onload trick.
+         The browser downloads the stylesheet off the critical path (like a
+         preload), then onload swaps it to media="all" making it active.
+         Only the weights we actually use are requested.
+         &display=swap  → font-display:swap, avoids FOIT.
+         Fonts are grouped into ONE request per family to minimise RTTs.    -->
+
+    <!-- 1. Noto Sans Devanagari — body & UI copy (wght 400-700 variable) -->
     <link
+      id="font-noto"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
       media="print"
-      onload="this.media = 'all'"
+      onload="this.media='all'"
     />
 
+    <!-- 2. Mukta — secondary body / captions (wght 400;600) -->
+    <link
+      id="font-mukta"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <!-- 3. Tiro Devanagari Marathi — display / headings (400 only, italic optional) -->
+    <link
+      id="font-tiro"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&display=optional"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <!-- 4. Inter — latin UI labels (wght 400;500;600;700) -->
+    <link
+      id="font-inter"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <!-- ═══ NOSCRIPT fallback (JS-disabled browsers) ════════════════════════ -->
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;600&family=Tiro+Devanagari+Marathi&family=Inter:wght@400;500;600;700&display=swap"
       />
     </noscript>
     <title>महाराष्ट्र वृत्त | Maharashtra News</title>
