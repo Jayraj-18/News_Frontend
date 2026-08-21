@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { WorldNewsMarquee } from './WorldNewsMarquee';
 
 export const Header = () => {
   const { lang, setLang, t } = useLanguage();
@@ -73,6 +74,9 @@ export const Header = () => {
 
         </div>
       </div>
+
+      {/* WORLD NEWS MARQUEE TICKER */}
+      <WorldNewsMarquee />
 
       {/* MAIN BRANDING HEADER */}
       <div className="py-4">

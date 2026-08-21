@@ -44,3 +44,128 @@
     color: #000 !important;
   }
 }
+
+/* ==========================================================================
+   WORLD NEWS MARQUEE TICKER
+   ========================================================================== */
+
+/* Keyframe: slides text from right → left */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Outer bar */
+.world-marquee-bar {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(90deg, #7f1d1d 0%, #991b1b 40%, #1e1e1e 100%);
+  height: 36px;
+  border-bottom: 2px solid #dc2626;
+  position: relative;
+  z-index: 10;
+}
+
+/* "WORLD" label badge */
+.world-marquee-label {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0 14px;
+  height: 100%;
+  white-space: nowrap;
+  box-shadow: 4px 0 12px rgba(0,0,0,0.4);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  padding-right: 22px;
+}
+
+/* Pulsing live dot */
+.world-marquee-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* Viewport clips the scrolling track */
+.world-marquee-viewport {
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  /* Fade edges */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 3%,
+    black 97%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 3%,
+    black 97%,
+    transparent 100%
+  );
+}
+
+/* Scrolling inner track — 50% wide so duplicated content loops seamlessly */
+.world-marquee-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+/* Pause on hover for accessibility */
+.world-marquee-bar:hover .world-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Individual news item link */
+.world-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fef2f2;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.world-marquee-item:hover {
+  color: #fca5a5;
+}
+
+/* Diamond separator between items */
+.world-marquee-separator {
+  color: #ef4444;
+  font-size: 0.55rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.world-marquee-title {
+  letter-spacing: 0.01em;
+}
