@@ -23,7 +23,7 @@ import "./index.css"; // Import Tailwind CSS
 // Protected Route Guard
 function AdminRoute() {
   const [authed, setAuthed] = useState(
-    () => sessionStorage.getItem("admin_authenticated") === "true"
+    () => sessionStorage.getItem("admin_authenticated") === "true" && Boolean(localStorage.getItem("adminToken"))
   );
 
   if (!authed) {
@@ -41,6 +41,7 @@ function AdminRoute() {
     <AdminDashboard
       onLogout={() => {
         sessionStorage.removeItem("admin_authenticated");
+        localStorage.removeItem("adminToken");
         setAuthed(false);
       }}
     />

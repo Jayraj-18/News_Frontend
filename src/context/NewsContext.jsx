@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 
 const rawApiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 const API_BASE_URL = rawApiBaseUrl.replace(/\/$/, '');
-const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_SECRET_TOKEN || '';
-
 const buildApiUrl = (path) => {
   if (API_BASE_URL) {
     return `${API_BASE_URL}${path}`;
@@ -14,11 +12,11 @@ const buildApiUrl = (path) => {
 /** Returns headers for read requests */
 const publicHeaders = { 'Content-Type': 'application/json' };
 
-/** Returns headers for write requests (POST, PUT, DELETE) */
-const adminHeaders = {
+/** Returns headers for authenticated write requests. */
+const getAdminHeaders = () => ({
   'Content-Type': 'application/json',
-  'x-admin-token': ADMIN_TOKEN,
-};
+  Authorization: `Bearer ${localStorage.getItem('adminToken') || ''}`,
+});
 
 // ─── Cache helpers ─────────────────────────────────────────────────────────────
 const CACHE_KEY = 'news_articles_cache';
@@ -117,7 +115,7 @@ export const NewsProvider = ({ children }) => {
     try {
       const res = await fetch(buildApiUrl('/api/articles'), {
         method: 'POST',
-        headers: adminHeaders,
+        headers: getAdminHeaders(),
         body: JSON.stringify(newArticle),
       });
 
@@ -145,7 +143,7 @@ export const NewsProvider = ({ children }) => {
     try {
       const res = await fetch(buildApiUrl(`/api/articles/${id}`), {
         method: 'PUT',
-        headers: adminHeaders,
+        headers: getAdminHeaders(),
         body: JSON.stringify(updatedFields),
       });
       if (!res.ok) {
@@ -170,7 +168,7 @@ export const NewsProvider = ({ children }) => {
     try {
       const res = await fetch(buildApiUrl(`/api/articles/${id}`), {
         method: 'DELETE',
-        headers: adminHeaders,
+        headers: getAdminHeaders(),
       });
       if (!res.ok) {
         const err = await res.json();

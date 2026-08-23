@@ -1,31 +1,37 @@
 import React, { useState } from 'react';
-
-// Credentials — change these to whatever you want
-const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin123';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../config/firebase';
 
 export const AdminLogin = ({ onLoginSuccess }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulate a brief loading state
-    setTimeout(() => {
-      if (username.trim() === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        sessionStorage.setItem('admin_authenticated', 'true');
-        onLoginSuccess();
-      } else {
-        setError('चुकीचे युजरनेम किंवा पासवर्ड. कृपया पुन्हा प्रयत्न करा.\n(Invalid username or password. Please try again.)');
-      }
+    try {
+      const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+      const idToken = await credential.user.getIdToken();
+
+      // Store the Firebase ID token used by protected API requests.
+      sessionStorage.setItem('admin_authenticated', 'true');
+      localStorage.setItem('adminToken', idToken);
+
+      // Trigger parent callback to enter CMS
+      onLoginSuccess();
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(
+        'चुकीचा ईमेल किंवा पासवर्ड. कृपया पुन्हा प्रयत्न करा.\n(Invalid email or password. Please try again.)'
+      );
+    } finally {
       setIsLoading(false);
-    }, 600);
+    }
   };
 
   return (
@@ -61,18 +67,18 @@ export const AdminLogin = ({ onLoginSuccess }) => {
         {/* FORM */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="username" className="text-sm font-semibold text-gray-700">
-              युजरनेम (Username)
+            <label htmlFor="email" className="text-sm font-semibold text-gray-700">
+              ईमेल (Email)
             </label>
             <div className="flex items-center border-[1.5px] border-gray-300 rounded-lg bg-gray-50 focus-within:border-red-600 focus-within:ring-4 focus-within:ring-red-600/10 focus-within:bg-white transition-all overflow-hidden">
-              <span className="px-3 text-base text-gray-400 shrink-0">👤</span>
+              <span className="px-3 text-base text-gray-400 shrink-0">✉️</span>
               <input
-                id="username"
-                type="text"
-                autoComplete="username"
-                placeholder="admin"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="admin@palghardrushti.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="flex-1 border-none outline-none bg-transparent py-2.5 pr-3 text-sm text-gray-900 placeholder-gray-400"
               />
