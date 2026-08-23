@@ -1,0 +1,7 @@
+# public/robots.txt
+
+User-agent: *
+Allow: /
+
+# Direct crawlers to your dynamic sitemap
+Sitemap: https://palghardrushti.netlify.app/sitemap.xml
