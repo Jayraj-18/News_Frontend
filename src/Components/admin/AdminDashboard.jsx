@@ -14,6 +14,11 @@ export const AdminDashboard = ({ onLogout }) => {
     titleMr: '',
     titleEn: '',
     summaryMr: '',
+    metaTitle: '',
+    metaDescription: '',
+    focusKeyword: '',
+    canonicalUrl: '',
+    noIndex: false,
     category: 'politics',
     isBreaking: false,
     isHero: false,
@@ -170,6 +175,11 @@ export const AdminDashboard = ({ onLogout }) => {
         en: formData.summaryMr || formData.titleMr
       },
       summaryMr: formData.summaryMr,
+      metaTitle: formData.metaTitle.trim(),
+      metaDescription: formData.metaDescription.trim(),
+      focusKeyword: formData.focusKeyword.trim(),
+      canonicalUrl: formData.canonicalUrl.trim(),
+      noIndex: Boolean(formData.noIndex),
       content: {
         mr: formData.contentMr,
         en: formData.contentMr
@@ -313,6 +323,78 @@ export const AdminDashboard = ({ onLogout }) => {
                 required
                 className="p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+              <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-3">
+                SEO माहिती (SEO Metadata)
+              </h3>
+              <div className="flex flex-col mb-4">
+                <label htmlFor="metaTitle" className="font-semibold text-sm mb-1 text-gray-800 dark:text-gray-200">
+                  SEO शीर्षक (Meta Title)
+                </label>
+                <input
+                  type="text"
+                  id="metaTitle"
+                  name="metaTitle"
+                  placeholder="रिक्त ठेवल्यास बातमीच्या शीर्षकावरून तयार होईल"
+                  value={formData.metaTitle}
+                  onChange={handleInputChange}
+                  className="p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex flex-col mb-4">
+                <label htmlFor="metaDescription" className="font-semibold text-sm mb-1 text-gray-800 dark:text-gray-200">
+                  SEO वर्णन (Meta Description)
+                </label>
+                <textarea
+                  id="metaDescription"
+                  name="metaDescription"
+                  rows="3"
+                  placeholder="रिक्त ठेवल्यास सारांशावरून तयार होईल"
+                  value={formData.metaDescription}
+                  onChange={handleInputChange}
+                  className="p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex flex-col mb-4">
+                <label htmlFor="focusKeyword" className="font-semibold text-sm mb-1 text-gray-800 dark:text-gray-200">
+                  मुख्य कीवर्ड (Focus Keyword, Optional)
+                </label>
+                <input
+                  type="text"
+                  id="focusKeyword"
+                  name="focusKeyword"
+                  placeholder="उदा. पालघर बातम्या"
+                  value={formData.focusKeyword}
+                  onChange={handleInputChange}
+                  className="p-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="flex flex-col mb-4">
+                <label htmlFor="canonicalUrl" className="font-semibold text-sm mb-1 text-gray-800 dark:text-gray-200">
+                  Canonical URL (Optional)
+                </label>
+                <input
+                  type="url"
+                  id="canonicalUrl"
+                  name="canonicalUrl"
+                  placeholder="रिक्त ठेवल्यास बातमीच्या URL वरून तयार होईल"
+                  value={formData.canonicalUrl}
+                  onChange={handleInputChange}
+                  className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <label className="flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="noIndex"
+                  checked={formData.noIndex}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 text-red-600 rounded border-gray-300 focus:ring-red-500"
+                />
+                शोध इंजिनमध्ये दाखवू नका (No Index)
+              </label>
             </div>
           </div>
 

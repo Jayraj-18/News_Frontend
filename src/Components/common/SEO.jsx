@@ -5,6 +5,17 @@ import { Helmet } from 'react-helmet-async';
 const BASE_URL = 'https://palghardrushti.netlify.app';
 const DEFAULT_TITLE = 'पालघर दृष्टी | महाराष्ट्रातील विश्वासार्ह बातमीपत्र';
 const DEFAULT_DESCRIPTION = 'राजकारण, गुन्हेगारी, शेती, क्रीडा आणि स्थानिक घडामोडींच्या ताज्या व अचूक बातम्या.';
+const DEFAULT_KEYWORDS = 'पालघर बातम्या, महाराष्ट्र बातम्या, Palghar News, Maharashtra News';
+const TWITTER_HANDLE = '@PalgharDrushti';
+
+/**
+ * Cleanly truncates text to target character count limits for SEO standards.
+ */
+const truncateText = (text, maxLength) => {
+  if (!text || typeof text !== 'string') return '';
+  const clean = text.replace(/\s+/g, ' ').trim();
+  return clean.length > maxLength ? `${clean.substring(0, maxLength - 3)}...` : clean;
+};
 
 /**
  * Safely resolves and validates image URLs for Google & Social Crawlers.
@@ -35,41 +46,69 @@ const getValidImageUrl = (imageSrc, baseUrl) => {
 const formatToISO = (dateInput) => {
   if (!dateInput) return new Date().toISOString();
   try {
-    return new Date(dateInput).toISOString();
+    const parsed = new Date(dateInput);
+    return isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
   } catch {
     return new Date().toISOString();
   }
 };
 
-export const SEO = ({ article, isArticle = false }) => {
-  // Extract values directly matching your Firebase NewsModel
-  const title = article?.titleMr || DEFAULT_TITLE;
-  const description = article?.summaryMr || article?.contentMr || DEFAULT_DESCRIPTION;
+export const SEO = ({
+  article,
+  isArticle = false,
+  focusKeyword = '',
+  noIndex = false,
+  canonicalUrl = '',
+  path = '',
+}) => {
+  // Extract values matching your Firebase NewsModel
+  const rawTitle = article?.titleMr || DEFAULT_TITLE;
+  const rawDescription = article?.summaryMr || article?.contentMr || DEFAULT_DESCRIPTION;
   const slug = article?.slug || article?.id || '';
   
+  // Character count optimizations (Title ~60 chars, Description ~160 chars)
+  const generatedTitle = isArticle && article?.titleMr ? `${rawTitle} | पालघर दृष्टी` : rawTitle;
+  const metaTitle = truncateText(article?.metaTitle || generatedTitle, 60);
+  const metaDescription = truncateText(article?.metaDescription || rawDescription, 160);
+  const resolvedFocusKeyword = article?.focusKeyword || focusKeyword;
+  const keywords = resolvedFocusKeyword ? `${resolvedFocusKeyword}, ${DEFAULT_KEYWORDS}` : DEFAULT_KEYWORDS;
+
   const imageUrl = getValidImageUrl(article?.featuredImage?.url, BASE_URL);
-  const url = `${BASE_URL}${slug ? `/article/${slug}` : ''}`;
+  
+  // Canonical URL construction
+  const currentPath = path || (slug ? `/article/${slug}` : '');
+  const url = `${BASE_URL}${currentPath}`;
+  const resolvedCanonicalUrl = article?.canonicalUrl || canonicalUrl || url;
+
+  const robotsDirective = (article?.noIndex ?? noIndex)
+    ? 'noindex, nofollow'
+    : 'index, follow, max-image-preview:large, max-snippet:-1';
 
   // Default SEO fallback for non-article pages (Homepage, Category pages, etc.)
   if (!isArticle || !article) {
     return (
       <Helmet>
-        <title>{DEFAULT_TITLE}</title>
-        <meta name="description" content={DEFAULT_DESCRIPTION} />
-        <link rel="canonical" href={BASE_URL} />
+        {/* Primary Meta */}
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta name="keywords" content={keywords} />
+        <link rel="canonical" href={resolvedCanonicalUrl} />
+        <meta name="robots" content={robotsDirective} />
 
         {/* Open Graph / Facebook / WhatsApp */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={DEFAULT_TITLE} />
-        <meta property="og:description" content={DEFAULT_DESCRIPTION} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
         <meta property="og:image" content={`${BASE_URL}/logo.png`} />
-        <meta property="og:url" content={BASE_URL} />
+        <meta property="og:url" content={resolvedCanonicalUrl} />
         <meta property="og:site_name" content="पालघर दृष्टी" />
+        <meta property="og:locale" content="mr_IN" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={DEFAULT_TITLE} />
-        <meta name="twitter:description" content={DEFAULT_DESCRIPTION} />
+        <meta name="twitter:site" content={TWITTER_HANDLE} />
+        <meta name="twitter:title" content={metaTitle} />
+        <meta name="twitter:description" content={metaDescription} />
         <meta name="twitter:image" content={`${BASE_URL}/logo.png`} />
       </Helmet>
     );
@@ -81,15 +120,15 @@ export const SEO = ({ article, isArticle = false }) => {
     '@type': 'NewsArticle',
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': url,
+      '@id': resolvedCanonicalUrl,
     },
-    headline: title,
+    headline: truncateText(rawTitle, 110),
     image: [imageUrl],
-    datePublished: formatToISO(article?.publishedAt),
-    dateModified: formatToISO(article?.updatedAt || article?.publishedAt),
+    datePublished: formatToISO(article?.publishedAt || article?.createdAt),
+    dateModified: formatToISO(article?.updatedAt || article?.publishedAt || article?.createdAt),
     author: {
       '@type': 'Person',
-      name: article?.author?.name || 'पालघर दृष्टी',
+      name: article?.author?.name || 'पालघर दृष्टी संपादक',
     },
     publisher: {
       '@type': 'Organization',
@@ -99,28 +138,33 @@ export const SEO = ({ article, isArticle = false }) => {
         url: `${BASE_URL}/logo.png`,
       },
     },
-    description,
+    description: metaDescription,
   };
 
   return (
     <Helmet>
       {/* Primary HTML Meta Tags */}
-      <title>{`${title} | पालघर दृष्टी`}</title>
-      <meta name="description" content={description} />
-      <link rel="canonical" href={url} />
+      <title>{metaTitle}</title>
+      <meta name="description" content={metaDescription} />
+      <meta name="keywords" content={keywords} />
+      <link rel="canonical" href={resolvedCanonicalUrl} />
+      <meta name="robots" content={robotsDirective} />
 
       {/* Open Graph / Facebook / WhatsApp */}
       <meta property="og:type" content="article" />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:title" content={metaTitle} />
+      <meta property="og:description" content={metaDescription} />
       <meta property="og:image" content={imageUrl} />
-      <meta property="og:url" content={url} />
+      <meta property="og:image:alt" content={metaTitle} />
+      <meta property="og:url" content={resolvedCanonicalUrl} />
       <meta property="og:site_name" content="पालघर दृष्टी" />
+      <meta property="og:locale" content="mr_IN" />
 
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:site" content={TWITTER_HANDLE} />
+      <meta name="twitter:title" content={metaTitle} />
+      <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={imageUrl} />
 
       {/* JSON-LD Schema Insertion */}
