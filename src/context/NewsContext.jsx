@@ -1,12 +1,31 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 
-const rawApiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
-const API_BASE_URL = rawApiBaseUrl.replace(/\/$/, '');
+const rawApiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
+const defaultLocalApiBaseUrl = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname)
+  ? 'http://localhost:5000'
+  : '';
+const API_BASE_URL = (rawApiBaseUrl || defaultLocalApiBaseUrl).replace(/\/$/, '');
+
 const buildApiUrl = (path) => {
+  if (!path.startsWith('/')) path = `/${path}`;
   if (API_BASE_URL) {
     return `${API_BASE_URL}${path}`;
   }
   return path;
+};
+
+const parseApiResponse = async (res, fallbackMessage = 'Unexpected server response') => {
+  const text = await res.text();
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    if (text.includes('<html') || text.includes('<!doctype')) {
+      throw new Error(fallbackMessage);
+    }
+    throw new Error(text.slice(0, 180) || fallbackMessage);
+  }
 };
 
 /** Returns headers for read requests */
@@ -77,16 +96,19 @@ export const NewsProvider = ({ children }) => {
       const res = await fetch(buildApiUrl('/api/articles'), {
         headers: publicHeaders,
       });
-      if (!res.ok) throw new Error(`Server error: ${res.status}`);
-      const json = await res.json();
-      const fresh = json.data || [];
+
+      const json = await parseApiResponse(res, 'Backend is not reachable or returned an invalid response.');
+      if (!res.ok) {
+        throw new Error(json?.message || `Server error: ${res.status}`);
+      }
+
+      const fresh = json?.data || [];
       setArticles(fresh);
       writeCache(fresh);
     } catch (err) {
       console.error('Failed to fetch articles from backend:', err);
       if (!silent) {
         setError(err.message);
-        // Graceful fallback: show cache if network failed on hard load
         const { articles: fallback } = readCache();
         if (fallback && fallback.length > 0) {
           setArticles(fallback);
@@ -120,18 +142,18 @@ export const NewsProvider = ({ children }) => {
       });
 
       console.log('addArticle response status:', res.status);
+      const json = await parseApiResponse(res, 'The article could not be published. Please check the backend URL and admin token.');
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || 'Failed to create article');
+        throw new Error(json?.message || `Failed to create article (${res.status})`);
       }
-      const json = await res.json();
-      // Prepend the newly created article to state
+
+      const savedArticle = json?.data || newArticle;
       setArticles((prev) => {
-        const next = [json.data, ...prev];
+        const next = [savedArticle, ...prev];
         writeCache(next);
         return next;
       });
-      return json.data;
+      return savedArticle;
     } catch (err) {
       console.error('addArticle error:', err);
       throw err;
@@ -146,11 +168,12 @@ export const NewsProvider = ({ children }) => {
         headers: getAdminHeaders(),
         body: JSON.stringify(updatedFields),
       });
+
+      const json = await parseApiResponse(res, 'The article update request failed because the backend is unavailable or returned an invalid response.');
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || 'Failed to update article');
+        throw new Error(json?.message || `Failed to update article (${res.status})`);
       }
-      const json = await res.json();
+
       setArticles((prev) => {
         const next = prev.map((art) => (art.id === id ? json.data : art));
         writeCache(next);

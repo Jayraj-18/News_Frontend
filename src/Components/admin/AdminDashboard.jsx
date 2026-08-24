@@ -141,7 +141,7 @@ export const AdminDashboard = ({ onLogout }) => {
   };
 
   // --- Submit Handler ---
-  const handleSubmit = (statusType) => {
+  const handleSubmit = async (statusType) => {
     if (!formData.titleMr) {
       alert('कृपया बातमीचे शीर्षक प्रविष्ट करा (Please enter article title)');
       return;
@@ -194,7 +194,7 @@ export const AdminDashboard = ({ onLogout }) => {
       tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       author: {
         name: "पालघर दृष्टी",
-        role: "संपादक टीम",
+        role: "संपेडक टीम",
         avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
       },
       publishedAt: formData.scheduledTime ? new Date(formData.scheduledTime).toISOString() : new Date().toISOString(),
@@ -203,13 +203,14 @@ export const AdminDashboard = ({ onLogout }) => {
       readingTime: Math.max(1, Math.ceil((formData.contentMr || '').length / 500))
     };
 
-    // Dispatch directly to Global News Context
-    addArticle(payload);
-
-    alert(`बातमी ${statusType === 'published' ? 'प्रकाशित' : 'ड्राफ्ट मध्ये जतन'} झाली!`);
-
-    // Reset fields for the next submission
-    resetForm();
+    try {
+      await addArticle(payload);
+      alert(`बातमी ${statusType === 'published' ? 'प्रकाशित' : 'ड्राफ्ट मध्ये जतन'} झाली!`);
+      resetForm();
+    } catch (error) {
+      console.error('Publish failed:', error);
+      alert(`बातमी ${statusType === 'published' ? 'प्रकाशित' : 'ड्राफ्ट मध्ये जतन'} झाली नाही.\n${error.message || 'कृपया backend आणि admin token तपासा.'}`);
+    }
   };
 
   // Dynamic aspect ratio class mapping for modal preview
