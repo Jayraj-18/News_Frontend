@@ -1,9 +1,18 @@
 import React from 'react';
-import { Mail, Phone, MapPin, Send, MessageSquare, Video } from 'lucide-react';
+import { Mail, Phone, MapPin, Video } from 'lucide-react';
+import SEO from '../Components/common/SEO'; // Ensure the import path matches your project structure
 
 export default function ContactUs() {
   return (
     <div className="min-h-screen bg-slate-100 py-10 px-4 sm:px-6 lg:px-8 font-sans">
+      {/* SEO Meta Tags for Contact Us Page */}
+      <SEO 
+        title="संपर्क साधा | पालघर दृष्टी"
+        description="पालघर दृष्टी बातमीपत्राच्या संपादकीय टीमशी संपर्क साधा. बातम्या पाठवण्यासाठी, जाहिरातींसाठी किंवा अभिप्रायासाठी संपर्क माहिती."
+        path="/contact"
+        focusKeyword="पालघर दृष्टी संपर्क"
+      />
+
       <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
         
         {/* Header */}
@@ -33,7 +42,7 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 text-base">कार्यालयीन पत्ता:</h3>
-                  <p className="text-slate-600 mt-0.5">News Police Reporter Office, पालघर, महाराष्ट्र - ४०१४०४</p>
+                  <p className="text-slate-600 mt-0.5">पालघर दृष्टी कार्यालय, पालघर, महाराष्ट्र - ४०१४०४</p>
                 </div>
               </div>
 
@@ -44,7 +53,7 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 text-base">ईमेल (Email):</h3>
-                  <p className="text-slate-600 mt-0.5">contact@newspolicereporter.com</p>
+                  <p className="text-slate-600 mt-0.5">contact@palghardrushti.com</p>
                 </div>
               </div>
 
@@ -70,7 +79,7 @@ export default function ContactUs() {
                 बातमीची कोणतीही टीप किंवा फोटो/व्हिडिओ पाठवण्यासाठी आमच्या व्हॉट्सॲप नंबरवर संपर्क करा.
               </p>
               <a 
-                href="https://youtube.com/@newspolicereporter" 
+                href="https://youtube.com/@palghardrushti" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm"
@@ -80,8 +89,6 @@ export default function ContactUs() {
               </a>
             </div>
           </div>
-
-        
 
         </div>
       </div>

@@ -1,13 +1,18 @@
 import React from 'react';
 import { ShieldCheck, Target, Users, MapPin, Mail, } from 'lucide-react';
-
+import SEO from '../Components/common/SEO'; // Ensure the import path matches your project structure
 export default function AboutUs() {
   const siteName = "पालघर दृष्टी";
   
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        
+         <SEO 
+                title="संपर्क साधा | पालघर दृष्टी"
+                description="पालघर दृष्टी बातमीपत्राच्या संपादकीय टीमशी संपर्क साधा. बातम्या पाठवण्यासाठी, जाहिरातींसाठी किंवा अभिप्रायासाठी संपर्क माहिती."
+                path="/contact"
+                focusKeyword="पालघर दृष्टी संपर्क"
+              />
         {/* Header Banner */}
         <div className="bg-red-600 text-white p-8 sm:p-12 text-center">
           <span className="inline-block px-3 py-1 bg-red-700 rounded-full text-xs font-semibold tracking-wide uppercase mb-3">

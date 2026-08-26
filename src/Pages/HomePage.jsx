@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNews } from "../context/NewsContext";
 import { useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router-dom";
-
+import SEO from '../Components/common/SEO'; // Ensure the import path matches your project structure
 // ─── Constants ───────────────────────────────────────────────────────────────
 const PAGE_SIZE = 9;
 
@@ -196,6 +196,12 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
 
   return (
     <div className="container mx-auto px-4 mt-6 mb-12">
+       <SEO 
+              title="संपर्क साधा | पालघर दृष्टी"
+              description="पालघर दृष्टी बातमीपत्राच्या संपादकीय टीमशी संपर्क साधा. बातम्या पाठवण्यासाठी, जाहिरातींसाठी किंवा अभिप्रायासाठी संपर्क माहिती."
+              path="/contact"
+              focusKeyword="पालघर दृष्टी संपर्क"
+            />
       {/* Category Header Banner */}
       {selectedCategory && (
         <div className="bg-white border-l-4 border-red-600 rounded-md p-6 mb-8 shadow-xs">

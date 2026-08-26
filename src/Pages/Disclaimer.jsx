@@ -1,13 +1,19 @@
 import React from 'react';
 import { AlertCircle, Copyright, ExternalLink, BookOpen } from 'lucide-react';
-
+import SEO from '../Components/common/SEO'; // Ensure the import path matches your project structure
 export default function Disclaimer() {
   const siteName = "पालघर दृष्टी";
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        
+        <SEO 
+          title="नियम, अटी व डिस्क्लेमर | पालघर दृष्टी"
+          description="पालघर दृष्टी वेबसाइटवरील नियम, अटी व डिस्क्लेमर. वेबसाइट वापरण्यापूर्वी कृपया हे माहिती काळजीपूर्वक वाचा."
+          path="/disclaimer"
+          focusKeyword="पालघर दृष्टी डिस्क्लेमर"
+        />
+
         {/* Header */}
         <div className="bg-slate-900 text-white p-8 sm:p-10">
           <h1 className="text-2xl sm:text-3xl font-bold">नियम, अटी व डिस्क्लेमर (Terms & Disclaimer)</h1>

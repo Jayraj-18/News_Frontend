@@ -1,13 +1,18 @@
 import React from 'react';
 import { Lock, Cookie, ShieldAlert, Eye } from 'lucide-react';
-
+import SEO from '../Components/common/SEO'; // Ensure the import path matches your project structure
 export default function PrivacyPolicy() {
   const siteName = "पालघर दृष्टी";
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        
+          <SEO 
+                 title="संपर्क साधा | पालघर दृष्टी"
+                 description="पालघर दृष्टी बातमीपत्राच्या संपादकीय टीमशी संपर्क साधा. बातम्या पाठवण्यासाठी, जाहिरातींसाठी किंवा अभिप्रायासाठी संपर्क माहिती."
+                 path="/contact"
+                 focusKeyword="पालघर दृष्टी संपर्क"
+               />
         {/* Header */}
         <div className="bg-slate-900 text-white p-8 sm:p-10">
           <div className="flex items-center gap-2 text-red-500 text-sm font-semibold uppercase tracking-wider mb-2">
