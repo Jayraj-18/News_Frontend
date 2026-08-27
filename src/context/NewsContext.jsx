@@ -95,6 +95,7 @@ export const NewsProvider = ({ children }) => {
     try {
       const res = await fetch(buildApiUrl('/api/articles'), {
         headers: publicHeaders,
+        cache: 'no-store',
       });
 
       const json = await parseApiResponse(res, 'Backend is not reachable or returned an invalid response.');
@@ -224,6 +225,7 @@ export const NewsProvider = ({ children }) => {
       try {
         const res = await fetch(buildApiUrl(`/api/articles/${identifier}`), {
           headers: publicHeaders,
+          cache: 'no-store',
         });
         if (!res.ok) return null;
         const json = await res.json();
