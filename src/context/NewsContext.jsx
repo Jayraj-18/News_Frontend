@@ -4,7 +4,8 @@ const rawApiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
 const defaultLocalApiBaseUrl = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname)
   ? 'http://localhost:5000'
   : '';
-const API_BASE_URL = (rawApiBaseUrl || defaultLocalApiBaseUrl).replace(/\/$/, '');
+const productionApiBaseUrl = 'https://news-backend-sqmg.onrender.com';
+const API_BASE_URL = (rawApiBaseUrl || defaultLocalApiBaseUrl || productionApiBaseUrl).replace(/\/$/, '');
 
 const buildApiUrl = (path) => {
   if (!path.startsWith('/')) path = `/${path}`;
@@ -40,7 +41,7 @@ const getAdminHeaders = () => ({
 // ─── Cache helpers ─────────────────────────────────────────────────────────────
 const CACHE_KEY = 'news_articles_cache';
 const CACHE_TS_KEY = 'news_articles_cache_ts';
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL_MS = 2 * 60 * 1000; // 2 minutes — keep news fresh
 
 function readCache() {
   try {
@@ -69,6 +70,16 @@ function writeCache(articles) {
 // ─── Context ──────────────────────────────────────────────────────────────────
 const NewsContext = createContext();
 
+// Fire a lightweight ping to pre-warm the Render server before the main fetch.
+// This means by the time fetchArticles() actually runs, the server is already awake.
+async function pingServer() {
+  try {
+    await fetch(buildApiUrl('/ping'), { method: 'GET', cache: 'no-store' });
+  } catch {
+    // Ignore — ping is best-effort
+  }
+}
+
 export const NewsProvider = ({ children }) => {
   // Seed articles from localStorage immediately so the first render shows data
   const { articles: cachedArticles, ts: cachedTs } = readCache();
@@ -78,6 +89,8 @@ export const NewsProvider = ({ children }) => {
   const isFresh = Boolean(cachedArticles) && Date.now() - cachedTs < CACHE_TTL_MS;
   const [loading, setLoading] = useState(!isFresh);
   const [error, setError] = useState(null);
+  // True when a fetch is taking >5 s (server cold-start scenario)
+  const [slowFetch, setSlowFetch] = useState(false);
 
   // Ref to prevent duplicate concurrent revalidation calls
   const revalidating = useRef(false);
@@ -90,7 +103,13 @@ export const NewsProvider = ({ children }) => {
     if (!silent) {
       setLoading(true);
       setError(null);
+      setSlowFetch(false);
     }
+
+    // Show a "server waking up" hint if the request takes longer than 5 seconds
+    const slowTimer = !silent
+      ? setTimeout(() => setSlowFetch(true), 5000)
+      : null;
 
     try {
       const res = await fetch(buildApiUrl('/api/articles'), {
@@ -117,17 +136,23 @@ export const NewsProvider = ({ children }) => {
         }
       }
     } finally {
+      clearTimeout(slowTimer);
       revalidating.current = false;
-      if (!silent) setLoading(false);
+      if (!silent) {
+        setLoading(false);
+        setSlowFetch(false);
+      }
     }
   }, []);
 
   useEffect(() => {
     if (isFresh) {
       // Cache is fresh: render immediately, still revalidate silently in background
+      pingServer(); // pre-warm server so next manual refresh is instant
       fetchArticles({ silent: true });
     } else {
-      // Cache is stale or empty: show loading indicator, fetch properly
+      // Cache is stale or empty: ping first (parallel), then fetch
+      pingServer();
       fetchArticles({ silent: false });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -242,6 +267,7 @@ export const NewsProvider = ({ children }) => {
       value={{
         articles,
         loading,
+        slowFetch,
         error,
         fetchArticles,
         addArticle,

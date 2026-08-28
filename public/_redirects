@@ -1,3 +1,4 @@
 /sitemap.xml  https://news-backend-sqmg.onrender.com/sitemap.xml  200
+/api/*        https://news-backend-sqmg.onrender.com/api/:splat  200
 
 /*  /index.html  200

@@ -117,7 +117,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export const HomePage = ({ currentPath = window.location.pathname }) => {
-  const { articles = [], loading } = useNews();
+  const { articles = [], loading, slowFetch } = useNews();
   const { t } = useLanguage();
 
   // ── Pagination state ──────────────────────────────────────────────────────
@@ -190,6 +190,25 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
             <SkeletonCard key={i} />
           ))}
         </div>
+        {slowFetch && (
+          <div style={{
+            textAlign: 'center',
+            marginTop: '1.5rem',
+            padding: '0.75rem 1.25rem',
+            background: 'linear-gradient(135deg,#fff7ed,#fef3c7)',
+            border: '1px solid #fbbf24',
+            borderRadius: '0.75rem',
+            fontSize: '0.875rem',
+            color: '#92400e',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
+          }}>
+            <span style={{ fontSize: '1.1rem' }}>⏳</span>
+            <span>सर्व्हर सुरू होत आहे, थोडी प्रतीक्षा करा… <em style={{ color: '#b45309' }}>(Server is waking up, please wait a moment…)</em></span>
+          </div>
+        )}
       </div>
     );
   }
