@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useNews } from '../context/NewsContext';
 import { SEO } from '../Components/common/SEO';
-import { ControlsBar } from '../Components/article/ControlsBar';
 
 export const ArticlePage = () => {
   const { lang, t } = useLanguage();
@@ -10,7 +9,7 @@ export const ArticlePage = () => {
   
   const [article, setArticle] = useState(null);
   const [loadingArticle, setLoadingArticle] = useState(true);
-  const [fontSizeOffset, setFontSizeOffset] = useState(0);
+  const [fontSizeOffset] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   // Extract ID or Slug from pathname e.g. /article/1722176400000 or /article/my-slug
@@ -192,8 +191,18 @@ export const ArticlePage = () => {
         {/* Main Grid: Body + Sidebar */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-10">
           
-          {/* Article Text Content */}
-          <main className="leading-relaxed text-zinc-200 [&>p]:mb-6 [&>p]:text-zinc-200 [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:border-b-2 [&>h2]:border-zinc-800 [&>h2]:pb-2 [&>h2]:text-white [&>a]:text-red-500">
+          {/* Article Text Content with Complete Tailwind HTML Styling Support */}
+          <main className="leading-relaxed text-zinc-200 
+            [&_p]:mb-6 [&_p]:text-zinc-200 [&_p]:text-base sm:[&_p]:text-lg [&_p]:leading-8
+            [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:text-white
+            [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4 [&_h2]:border-b-2 [&_h2]:border-zinc-800 [&_h2]:pb-2 [&_h2]:text-white
+            [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-6 [&_h3]:mb-3 [&_h3]:text-zinc-100
+            [&_a]:text-red-500 [&_a]:underline hover:[&_a]:text-red-400
+            [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:mb-6 [&_ul]:space-y-2
+            [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:mb-6 [&_ol]:space-y-2
+            [&_li]:text-zinc-200
+            [&_blockquote]:border-l-4 [&_blockquote]:border-red-600 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-6 [&_blockquote]:text-zinc-300
+          ">
             <div dangerouslySetInnerHTML={{ __html: articleContent }} />
 
             {/* Gallery Images if attached */}
