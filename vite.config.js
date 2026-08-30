@@ -2,6 +2,21 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+function deferGeneratedCss() {
+  return {
+    name: 'defer-generated-css',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html) {
+        return html.replace(
+          /<link rel="stylesheet" crossorigin href="([^"]+\.css)">/g,
+          '<link rel="preload" as="style" href="$1" crossorigin onload="this.onload=null;this.rel=\'stylesheet\'"><noscript><link rel="stylesheet" href="$1"></noscript>'
+        )
+      }
+    }
+  }
+}
+
 // NOTE: The old deferCss() plugin was REMOVED.
 // It was deferring the main app CSS bundle, causing an unstyled flash on every
 // page load which tanks FCP. Google Fonts are already loaded non-blocking via
@@ -15,6 +30,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      deferGeneratedCss(),
     ],
 
     server: {

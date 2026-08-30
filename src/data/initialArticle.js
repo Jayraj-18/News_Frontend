@@ -6,7 +6,10 @@ export const initialArticles = [
     titleMr: "India Energy Policy: आयात जोखीम कमी करण्यासाठी भारताचा 'कोल गॅसिफिकेशन' प्रकल्पांवर भर",
     summaryMr: 'भारत इंधन आयातीवरील अवलंबित्व आणि जागतिक धोके कमी करण्यासाठी कोल गॅसिफिकेशन तंत्रज्ञानाला प्रोत्साहन देत आहे.',
     category: 'world',
-    featuredImage: { url: 'https://res.cloudinary.com/dpmipvmgg/image/upload/v1787849052/rq7dotcnxxykxizsjadp.webp' },
+    featuredImage: {
+      url: 'https://res.cloudinary.com/dpmipvmgg/image/upload/v1787849052/rq7dotcnxxykxizsjadp.webp',
+      originalUrl: 'https://res.cloudinary.com/dpmipvmgg/image/upload/v1787849052/rq7dotcnxxykxizsjadp.webp'
+    },
     author: { name: 'पालघर दृष्टी' },
     publishedAt: '2026-08-27T16:44:13.077Z',
     createdAt: 1787849054217,
@@ -20,7 +23,10 @@ export const initialArticles = [
     titleMr: 'ज्येष्ठ महिलेची सोन्याची माळ लुटली; दोन तासांत चार आरोपी जेरबंद!',
     summaryMr: 'ज्येष्ठ महिलेची सोन्याची माळ लुटणाऱ्या चार आरोपींना पोलिसांनी जेरबंद केले.',
     category: 'crime',
-    featuredImage: { url: 'https://res.cloudinary.com/dpmipvmgg/image/upload/v1787826930/awlrwsgn3rygkawtnqit.webp' },
+    featuredImage: {
+      url: 'https://res.cloudinary.com/dpmipvmgg/image/upload/v1787826930/awlrwsgn3rygkawtnqit.webp',
+      originalUrl: 'https://res.cloudinary.com/dpmipvmgg/image/upload/v1787826930/awlrwsgn3rygkawtnqit.webp'
+    },
     author: { name: 'पालघर दृष्टी' },
     publishedAt: '2026-08-27T10:35:32.490Z',
     createdAt: 1787826928534,
