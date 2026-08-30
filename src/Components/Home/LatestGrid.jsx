@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../../Utils/imageUrl';
 
 export const LatestGrid = ({ articles }) => {
   const { lang, t } = useLanguage();
@@ -30,7 +31,9 @@ export const LatestGrid = ({ articles }) => {
               {/* MEDIA WRAPPER */}
               <a href={`/article/${art.slug}`} className="relative block aspect-video overflow-hidden">
                 <img 
-                  src={art.image.url} 
+                  src={getOptimizedImageUrl(art.image.url, { width: 420, height: 240 })} 
+                  srcSet={getResponsiveImageSrcSet(art.image.url, [320, 420, 640], 240)}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   alt={art.image.alt} 
                   loading="lazy" 
                   width="400" 

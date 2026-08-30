@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../../Utils/imageUrl';
 
 export const HeroSection = ({ article }) => {
   const { lang, t } = useLanguage();
@@ -16,7 +17,9 @@ export const HeroSection = ({ article }) => {
         {/* IMAGE WRAPPER */}
         <a href={`/article/${article.slug}`} className="relative block overflow-hidden aspect-video">
           <img 
-            src={article.image.url} 
+            src={getOptimizedImageUrl(article.image.url, { width: 900, height: 520 })} 
+            srcSet={getResponsiveImageSrcSet(article.image.url, [640, 900, 1200], 520)}
+            sizes="(min-width: 1024px) 55vw, 100vw"
             alt={article.image.alt} 
             width="1200" 
             height="675" 

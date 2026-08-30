@@ -388,7 +388,7 @@ export const AdminDashboard = ({ onLogout }) => {
 
       const defaultImage = {
         url:
-          'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=420&h=280&q=75',
 
         alt: formData.titleMr,
 
@@ -537,7 +537,7 @@ export const AdminDashboard = ({ onLogout }) => {
           role: 'संपेडक टीम',
 
           avatar:
-            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=96&h=96&q=75'
         },
 
         // -----------------------------------------

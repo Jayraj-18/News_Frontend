@@ -3,6 +3,7 @@ import { useNews } from "../context/NewsContext";
 import { useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router-dom";
 import SEO from '../Components/common/SEO'; // Ensure the import path matches your project structure
+import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../Utils/imageUrl';
 // ─── Constants ───────────────────────────────────────────────────────────────
 const PAGE_SIZE = 9;
 
@@ -270,7 +271,16 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
               >
                 {(heroArticle.featuredImage?.url || heroArticle.image?.url) && (
                   <img
-                    src={heroArticle.featuredImage?.url || heroArticle.image?.url}
+                    src={getOptimizedImageUrl(
+                      heroArticle.featuredImage?.url || heroArticle.image?.url,
+                      { width: 900, height: 520 }
+                    )}
+                    srcSet={getResponsiveImageSrcSet(
+                      heroArticle.featuredImage?.url || heroArticle.image?.url,
+                      [640, 900, 1200],
+                      520
+                    )}
+                    sizes="(min-width: 850px) 55vw, 100vw"
                     alt={heroArticle.titleMr || heroArticle.title?.mr}
                     fetchpriority="high"
                     loading="eager"
@@ -349,7 +359,9 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                       >
                         {imgUrl ? (
                           <img
-                            src={imgUrl}
+                            src={getOptimizedImageUrl(imgUrl, { width: 420, height: 240 })}
+                            srcSet={getResponsiveImageSrcSet(imgUrl, [320, 420, 640], 240)}
+                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                             alt={titleText}
                             loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"

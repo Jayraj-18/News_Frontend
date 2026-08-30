@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../Utils/imageUrl';
 import { useNews } from '../context/NewsContext';
 import { SEO } from '../Components/common/SEO';
 
@@ -148,7 +149,9 @@ export const ArticlePage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-y border-zinc-800 py-4 my-6">
             <div className="flex items-center gap-3">
               <img 
-                src={authorAvatar} 
+                src={getOptimizedImageUrl(authorAvatar, { width: 96, height: 96 })} 
+                srcSet={getResponsiveImageSrcSet(authorAvatar, [48, 96], 96)}
+                sizes="44px"
                 alt={authorName} 
                 className="w-11 h-11 rounded-full object-cover border border-zinc-700" 
                 loading="lazy" 
@@ -172,7 +175,9 @@ export const ArticlePage = () => {
         {imageUrl && (
           <figure className="mb-8">
             <img 
-              src={imageUrl} 
+              src={getOptimizedImageUrl(imageUrl, { width: 1200, height: 675 })} 
+              srcSet={getResponsiveImageSrcSet(imageUrl, [640, 900, 1200], 675)}
+              sizes="(min-width: 1100px) 1100px, 100vw"
               alt={articleTitle} 
               width="1200" 
               height="675"
@@ -214,7 +219,7 @@ export const ArticlePage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {galleryImages.map((gImg, idx) => (
                     <figure key={gImg.id || idx} className="m-0 border border-zinc-800 rounded overflow-hidden bg-zinc-900">
-                      <img src={gImg.url} alt={gImg.caption || 'Gallery Image'} className="w-full h-44 object-cover" fetchpriority="high" loading="eager" />
+                      <img src={getOptimizedImageUrl(gImg.url, { width: 600, height: 352 })} srcSet={getResponsiveImageSrcSet(gImg.url, [320, 600], 352)} sizes="(min-width: 640px) 50vw, 100vw" alt={gImg.caption || 'Gallery Image'} className="w-full h-44 object-cover" loading="lazy" />
                       {gImg.caption && (
                         <figcaption className="p-2 text-xs text-zinc-300">
                           {gImg.caption}

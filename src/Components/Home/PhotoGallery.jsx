@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../../Utils/imageUrl';
 
 export const PhotoGallery = ({ photos }) => {
   const { lang, t } = useLanguage();
@@ -8,13 +9,13 @@ export const PhotoGallery = ({ photos }) => {
     {
       id: "p1",
       title: { mr: "पंढरपूर आषाढी वारी: भक्तीमय वातावरणात पालखीचे प्रस्थान", en: "Pandharpur Wari: Palkhi Departs in Devotional Atmosphere" },
-      url: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=800&q=80",
+      url: "https://images.unsplash.com/photo-1561361513-2d000a50f0dc?auto=format&fit=crop&w=420&h=280&q=75",
       count: 12
     },
     {
       id: "p2",
       title: { mr: "सह्याद्रीच्या कुशीतील निसर्गरम्य धबधबे", en: "Scenic Waterfalls in the Sahyadri Ranges" },
-      url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+      url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=420&h=280&q=75",
       count: 8
     }
   ];
@@ -37,7 +38,9 @@ export const PhotoGallery = ({ photos }) => {
               {/* IMAGE CONTAINER */}
               <div className="relative aspect-[16/10] overflow-hidden rounded">
                 <img 
-                  src={photo.url} 
+                  src={getOptimizedImageUrl(photo.url, { width: 420, height: 280 })} 
+                  srcSet={getResponsiveImageSrcSet(photo.url, [320, 420, 640], 280)}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                   alt={title} 
                   loading="lazy" 
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
