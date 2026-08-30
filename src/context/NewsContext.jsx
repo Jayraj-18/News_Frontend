@@ -245,7 +245,9 @@ export const NewsProvider = ({ children }) => {
       const cached = articles.find(
         (art) => String(art.id) === String(identifier) || art.slug === identifier
       );
-      if (cached) return cached;
+      // The list endpoint intentionally contains summaries only. Fetch the
+      // full record before opening an article page.
+      if (cached && (cached.contentMr || cached.content || cached.galleryImages)) return cached;
 
       // Fetch from API
       try {

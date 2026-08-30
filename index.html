@@ -69,19 +69,24 @@
       />
     </noscript>
     
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-4PZY7QE1MV"
-    ></script>
+    <!-- Load analytics after the first view or on user interaction. -->
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-4PZY7QE1MV");
+      window.loadAnalytics = function () {
+        if (window.analyticsLoaded) return;
+        window.analyticsLoaded = true;
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-4PZY7QE1MV');
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4PZY7QE1MV';
+        document.head.appendChild(script);
+      };
+      ['click', 'scroll', 'keydown', 'touchstart'].forEach(function (eventName) {
+        window.addEventListener(eventName, window.loadAnalytics, { once: true, passive: true });
+      });
+      window.setTimeout(window.loadAnalytics, 10000);
     </script>
   </head>
   <body>

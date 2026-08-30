@@ -51,6 +51,10 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
+            // Firebase is admin-only; keep it out of the public preload graph.
+            if (id.includes('node_modules/firebase/')) {
+              return 'firebase-vendor'
+            }
             // React core — always needed, cache separately
             if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
               return 'react-vendor'

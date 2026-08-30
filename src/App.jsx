@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,13 +11,14 @@ import { NewsProvider } from "./context/NewsContext";
 import { Header } from "./Components/common/Header";
 import { HomePage } from "./Pages/HomePage";
 import { ArticlePage } from "./Pages/ArticlePage";
-import { AdminDashboard } from "./Components/admin/AdminDashboard";
-import { AdminLogin } from "./Components/admin/AdminLogin";
 import AboutUs from "./Pages/AboutUs";
 import ContactUs from "./Pages/ContactUs";
 import Disclaimer from "./Pages/Disclaimer";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import "./index.css"; // Import Tailwind CSS
+
+const AdminDashboard = lazy(() => import("./Components/admin/AdminDashboard").then((module) => ({ default: module.AdminDashboard })));
+const AdminLogin = lazy(() => import("./Components/admin/AdminLogin").then((module) => ({ default: module.AdminLogin })));
 
 
 // Protected Route Guard
@@ -28,23 +29,27 @@ function AdminRoute() {
 
   if (!authed) {
     return (
-      <AdminLogin
-        onLoginSuccess={() => {
-          sessionStorage.setItem("admin_authenticated", "true");
-          setAuthed(true);
-        }}
-      />
+      <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+        <AdminLogin
+          onLoginSuccess={() => {
+            sessionStorage.setItem("admin_authenticated", "true");
+            setAuthed(true);
+          }}
+        />
+      </Suspense>
     );
   }
 
   return (
-    <AdminDashboard
-      onLogout={() => {
-        sessionStorage.removeItem("admin_authenticated");
-        localStorage.removeItem("adminToken");
-        setAuthed(false);
-      }}
-    />
+    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+      <AdminDashboard
+        onLogout={() => {
+          sessionStorage.removeItem("admin_authenticated");
+          localStorage.removeItem("adminToken");
+          setAuthed(false);
+        }}
+      />
+    </Suspense>
   );
 }
 
