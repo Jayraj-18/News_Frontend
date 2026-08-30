@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { initialArticles } from '../data/initialArticle';
 
 const rawApiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
 const defaultLocalApiBaseUrl = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname)
@@ -84,7 +85,7 @@ export const NewsProvider = ({ children }) => {
   // Seed articles from localStorage immediately so the first render shows data
   const { articles: cachedArticles, ts: cachedTs } = readCache();
 
-  const [articles, setArticles] = useState(cachedArticles || []);
+  const [articles, setArticles] = useState(cachedArticles || initialArticles);
   // If we already have fresh-enough cache, skip the loading state entirely
   const isFresh = Boolean(cachedArticles) && Date.now() - cachedTs < CACHE_TTL_MS;
   const [loading, setLoading] = useState(!isFresh);
@@ -146,15 +147,15 @@ export const NewsProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (isFresh) {
-      // Cache is fresh: render immediately, still revalidate silently in background
-      pingServer(); // pre-warm server so next manual refresh is instant
-      fetchArticles({ silent: true });
-    } else {
-      // Cache is stale or empty: ping first (parallel), then fetch
-      pingServer();
-      fetchArticles({ silent: false });
-    }
+    // Let Render finish waking the process before opening the database request.
+    // Starting both requests together still leaves the article request queued
+    // behind the cold start, which is especially visible on mobile networks.
+    const bootstrap = async () => {
+      await pingServer();
+      await fetchArticles({ silent: isFresh });
+    };
+
+    bootstrap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
