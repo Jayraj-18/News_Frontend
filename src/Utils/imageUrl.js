@@ -9,7 +9,7 @@ export const getOptimizedImageUrl = (url, { width, height } = {}) => {
       width && `w_${width}`,
       height && `h_${height}`,
       'c_fill',
-      'q_auto',
+      'q_auto:eco',
       'f_auto'
     ].filter(Boolean).join(',');
 
@@ -22,7 +22,7 @@ export const getOptimizedImageUrl = (url, { width, height } = {}) => {
     if (height) optimizedUrl.searchParams.set('h', height);
     optimizedUrl.searchParams.set('fit', 'crop');
     optimizedUrl.searchParams.set('auto', 'format');
-    optimizedUrl.searchParams.set('q', '75');
+    optimizedUrl.searchParams.set('q', '65');
     return optimizedUrl.toString();
   }
 

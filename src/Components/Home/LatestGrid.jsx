@@ -31,9 +31,9 @@ export const LatestGrid = ({ articles }) => {
               {/* MEDIA WRAPPER */}
               <a href={`/article/${art.slug}`} className="relative block aspect-video overflow-hidden">
                 <img 
-                  src={getOptimizedImageUrl(art.image.url, { width: 420, height: 240 })} 
-                  srcSet={getResponsiveImageSrcSet(art.image.url, [320, 420, 640], 240)}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  src={getOptimizedImageUrl(art.image.url, { width: 320, height: 180 })} 
+                  srcSet={getResponsiveImageSrcSet(art.image.url, [160, 240, 320, 420], 180)}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 33.333vw"
                   alt={art.image.alt} 
                   loading="lazy" 
                   width="400" 

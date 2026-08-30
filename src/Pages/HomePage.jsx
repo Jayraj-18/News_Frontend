@@ -359,9 +359,9 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                       >
                         {imgUrl ? (
                           <img
-                            src={getOptimizedImageUrl(imgUrl, { width: 420, height: 240 })}
-                            srcSet={getResponsiveImageSrcSet(imgUrl, [320, 420, 640], 240)}
-                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                            src={getOptimizedImageUrl(imgUrl, { width: 320, height: 180 })}
+                            srcSet={getResponsiveImageSrcSet(imgUrl, [160, 240, 320, 420], 180)}
+                            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 33.333vw"
                             alt={titleText}
                             loading="lazy"
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
