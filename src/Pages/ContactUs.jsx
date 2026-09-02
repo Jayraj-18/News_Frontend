@@ -42,7 +42,7 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 text-base">कार्यालयीन पत्ता:</h3>
-                  <p className="text-slate-600 mt-0.5">पालघर दृष्टी कार्यालय, पालघर, महाराष्ट्र - ४०१४०४</p>
+                  <p className="text-slate-600 mt-0.5">पालघर दृष्टी, दुसरा मजला, न्यू मेट्रो प्लाझा बिल्डींग, मनोर बस स्टॉप समोर, मनोर, ता. आणि जिल्हा. पालघर - ४०१४०३</p>
                 </div>
               </div>
 
@@ -53,7 +53,7 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 text-base">ईमेल (Email):</h3>
-                  <p className="text-slate-600 mt-0.5">contact@palghardrushti.com</p>
+                  <p className="text-slate-600 mt-0.5">palghardrushti@gmail.com</p>
                 </div>
               </div>
 
@@ -64,7 +64,7 @@ export default function ContactUs() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-900 text-base">फोन / व्हॉट्सॲप:</h3>
-                  <p className="text-slate-600 mt-0.5">+91 98XXX XXXXX</p>
+                  <p className="text-slate-600 mt-0.5">+91 9209251929</p>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@ export default function ContactUs() {
                 बातमीची कोणतीही टीप किंवा फोटो/व्हिडिओ पाठवण्यासाठी आमच्या व्हॉट्सॲप नंबरवर संपर्क करा.
               </p>
               <a 
-                href="https://youtube.com/@palghardrushti" 
+                href="https://www.youtube.com/@NewsPoliceReporter" 
                 target="_blank" 
                 rel="noreferrer" 
                 className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors shadow-sm"
