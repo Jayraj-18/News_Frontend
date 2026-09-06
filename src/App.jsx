@@ -69,6 +69,10 @@ function MainContent() {
             element={<HomePage key={currentPath} currentPath={currentPath} />}
           />
           <Route
+            path="/news/:slug"
+            element={<ArticlePage key={currentPath} currentPath={currentPath} />}
+          />
+          <Route
             path="/article/:id"
             element={<ArticlePage key={currentPath} currentPath={currentPath} />}
           />

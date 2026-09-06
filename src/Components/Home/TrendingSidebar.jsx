@@ -38,7 +38,7 @@ export const TrendingSidebar = ({ articles }) => {
                 
                 <h3 className="text-sm font-medium leading-snug m-0 text-gray-900 dark:text-gray-100">
                   <a 
-                    href={`/article/${art.slug}`}
+                    href={`/news/${art.slug}`}
                     className="hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
                   >
                     {title}

@@ -68,7 +68,7 @@ export const SEO = ({
 
   const imageUrl = getValidImageUrl(article?.featuredImage?.url, BASE_URL);
   
-  const currentPath = path || (slug ? `/article/${slug}` : '');
+  const currentPath = path || (slug ? `/news/${slug}` : '');
   const url = `${BASE_URL}${currentPath}`;
   const resolvedCanonicalUrl = article?.canonicalUrl || canonicalUrl || url;
 

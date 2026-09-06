@@ -13,9 +13,9 @@ export const ArticlePage = () => {
   const [fontSizeOffset] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Extract ID or Slug from pathname e.g. /article/1722176400000 or /article/my-slug
+  // Support the new slug route and legacy article links.
   const pathname = window.location.pathname;
-  const pathParts = pathname.split('/article/').filter(Boolean);
+  const pathParts = pathname.split(/\/(?:news|article)\//).filter(Boolean);
   const articleIdOrSlug = pathParts[pathParts.length - 1] || '';
 
   useEffect(() => {

@@ -1646,7 +1646,7 @@ export const AdminDashboard = ({ onLogout }) => {
                       )}
 
                       <a
-                        href={`/article/${art.id}`}
+                        href={`/news/${art.slug || art.id}`}
                         target="_blank"
                         rel="noreferrer"
                         className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs inline-block text-decoration-none transition-colors"

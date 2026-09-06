@@ -29,7 +29,7 @@ export const LatestGrid = ({ articles }) => {
               className="group flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded overflow-hidden transition-shadow hover:shadow-md"
             >
               {/* MEDIA WRAPPER */}
-              <a href={`/article/${art.slug}`} className="relative block aspect-video overflow-hidden">
+              <a href={`/news/${art.slug}`} className="relative block aspect-video overflow-hidden">
                 <img 
                   src={getOptimizedImageUrl(art.image.url, { width: 320, height: 180 })} 
                   srcSet={getResponsiveImageSrcSet(art.image.url, [160, 240, 320, 420], 180)}
@@ -49,7 +49,7 @@ export const LatestGrid = ({ articles }) => {
               <div className="p-4 flex flex-col flex-1">
                 <h3 className="text-lg font-bold leading-snug mb-2 text-gray-900 dark:text-gray-100">
                   <a 
-                    href={`/article/${art.slug}`}
+                    href={`/news/${art.slug}`}
                     className="hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
                   >
                     {title}

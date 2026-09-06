@@ -54,7 +54,7 @@ export const WorldNewsMarquee = () => {
           {items.map((article, idx) => (
             <a
               key={`${article.id}-${idx}`}
-              href={`/article/${article.slug || article.id}`}
+              href={`/news/${article.slug || article.id}`}
               className="world-marquee-item"
               tabIndex={idx < worldNews.length ? 0 : -1}
             >

@@ -15,7 +15,7 @@ export const HeroSection = ({ article }) => {
       <div className="group grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-0 lg:gap-8 bg-gray-50 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-shadow hover:shadow-lg">
         
         {/* IMAGE WRAPPER */}
-        <a href={`/article/${article.slug}`} className="relative block overflow-hidden aspect-video">
+        <a href={`/news/${article.slug}`} className="relative block overflow-hidden aspect-video">
           <img 
             src={getOptimizedImageUrl(article.image.url, { width: 900, height: 520 })} 
             srcSet={getResponsiveImageSrcSet(article.image.url, [640, 900, 1200], 520)}
@@ -35,7 +35,7 @@ export const HeroSection = ({ article }) => {
         <div className="p-6 lg:py-8 lg:pr-8 lg:pl-0 flex flex-col justify-center">
           <h1 className="text-2xl lg:text-3xl font-bold leading-tight mb-4 text-gray-900 dark:text-gray-100">
             <a 
-              href={`/article/${article.slug}`} 
+              href={`/news/${article.slug}`}
               className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors no-underline"
             >
               {title}
