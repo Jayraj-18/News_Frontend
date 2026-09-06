@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { initialArticles } from '../data/initialArticle';
+import { getArticleSlug } from '../Utils/articleUrl';
 
 const rawApiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
 const defaultLocalApiBaseUrl = typeof window !== 'undefined' && /localhost|127\.0\.0\.1/.test(window.location.hostname)
@@ -243,7 +244,7 @@ export const NewsProvider = ({ children }) => {
 
       // Check in-memory cache first
       const cached = articles.find(
-        (art) => String(art.id) === String(identifier) || art.slug === identifier
+        (art) => String(art.id) === String(identifier) || art.slug === identifier || getArticleSlug(art) === identifier
       );
       // The list endpoint intentionally contains summaries only. Fetch the
       // full record before opening an article page.
@@ -251,7 +252,8 @@ export const NewsProvider = ({ children }) => {
 
       // Fetch from API
       try {
-        const res = await fetch(buildApiUrl(`/api/articles/${identifier}`), {
+        const lookupIdentifier = cached?.slug || cached?.id || identifier;
+        const res = await fetch(buildApiUrl(`/api/articles/${lookupIdentifier}`), {
           headers: publicHeaders,
           cache: 'no-store',
         });

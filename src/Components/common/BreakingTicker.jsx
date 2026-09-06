@@ -1,3 +1,4 @@
+import { getArticleUrl } from '../../Utils/articleUrl';
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -34,7 +35,7 @@ export const BreakingTicker = ({ newsItems }) => {
               return (
                 <a
                   key={`${item.id || index}-${index}`}
-                  href={`/news/${item.slug}`}
+                  href={getArticleUrl(item)}
                   className="text-gray-900 dark:text-gray-100 text-sm sm:text-base font-semibold no-underline inline-flex items-center px-6 transition-colors hover:text-blue-600 dark:hover:text-blue-400 hover:underline"
                 >
                   <span className="text-red-600 mr-2 font-bold">•</span>

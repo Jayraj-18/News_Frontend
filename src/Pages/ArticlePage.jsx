@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../Utils/imageUrl';
 import { useNews } from '../context/NewsContext';
 import { SEO } from '../Components/common/SEO';
+import { getArticleSlug, getArticleUrl } from '../Utils/articleUrl';
 
 export const ArticlePage = () => {
+  const navigate = useNavigate();
   const { lang, t } = useLanguage();
   const { getArticleByIdOrSlug, articles } = useNews();
   
@@ -16,7 +19,8 @@ export const ArticlePage = () => {
   // Support the new slug route and legacy article links.
   const pathname = window.location.pathname;
   const pathParts = pathname.split(/\/(?:news|article)\//).filter(Boolean);
-  const articleIdOrSlug = pathParts[pathParts.length - 1] || '';
+  const encodedArticleIdOrSlug = pathParts[pathParts.length - 1] || '';
+  const articleIdOrSlug = decodeURIComponent(encodedArticleIdOrSlug);
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -31,9 +35,12 @@ export const ArticlePage = () => {
       const fetched = await getArticleByIdOrSlug(articleIdOrSlug);
       if (fetched) {
         setArticle(fetched);
+        if (pathname.startsWith('/news/') && getArticleSlug(fetched) !== articleIdOrSlug) {
+          navigate(getArticleUrl(fetched), { replace: true });
+        }
       } else {
         const fallback = articles.find(
-          (art) => String(art.id) === String(articleIdOrSlug) || art.slug === articleIdOrSlug
+          (art) => String(art.id) === String(articleIdOrSlug) || art.slug === articleIdOrSlug || getArticleSlug(art) === articleIdOrSlug
         );
         setArticle(fallback || null);
       }
@@ -42,7 +49,7 @@ export const ArticlePage = () => {
     };
 
     loadArticle();
-  }, [articleIdOrSlug, articles, getArticleByIdOrSlug]);
+  }, [articleIdOrSlug, articles, getArticleByIdOrSlug, navigate, pathname]);
 
   // Scroll Progress calculation
   useEffect(() => {

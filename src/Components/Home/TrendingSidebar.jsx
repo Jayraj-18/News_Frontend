@@ -1,3 +1,4 @@
+import { getArticleUrl } from '../../Utils/articleUrl';
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -38,7 +39,7 @@ export const TrendingSidebar = ({ articles }) => {
                 
                 <h3 className="text-sm font-medium leading-snug m-0 text-gray-900 dark:text-gray-100">
                   <a 
-                    href={`/news/${art.slug}`}
+                    href={getArticleUrl(art)}
                     className="hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
                   >
                     {title}

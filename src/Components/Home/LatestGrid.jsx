@@ -1,3 +1,4 @@
+import { getArticleUrl } from '../../Utils/articleUrl';
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../../Utils/imageUrl';
@@ -29,7 +30,7 @@ export const LatestGrid = ({ articles }) => {
               className="group flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded overflow-hidden transition-shadow hover:shadow-md"
             >
               {/* MEDIA WRAPPER */}
-              <a href={`/news/${art.slug}`} className="relative block aspect-video overflow-hidden">
+              <a href={getArticleUrl(art)} className="relative block aspect-video overflow-hidden">
                 <img 
                   src={getOptimizedImageUrl(art.image.url, { width: 320, height: 180 })} 
                   srcSet={getResponsiveImageSrcSet(art.image.url, [160, 240, 320, 420], 180)}
@@ -49,7 +50,7 @@ export const LatestGrid = ({ articles }) => {
               <div className="p-4 flex flex-col flex-1">
                 <h3 className="text-lg font-bold leading-snug mb-2 text-gray-900 dark:text-gray-100">
                   <a 
-                    href={`/news/${art.slug}`}
+                    href={getArticleUrl(art)}
                     className="hover:text-red-600 dark:hover:text-red-400 transition-colors no-underline"
                   >
                     {title}

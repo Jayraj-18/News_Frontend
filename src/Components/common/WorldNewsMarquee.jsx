@@ -1,3 +1,4 @@
+import { getArticleUrl } from '../../Utils/articleUrl';
 import React, { useEffect, useRef } from 'react';
 import { useNews } from '../../context/NewsContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -54,7 +55,7 @@ export const WorldNewsMarquee = () => {
           {items.map((article, idx) => (
             <a
               key={`${article.id}-${idx}`}
-              href={`/news/${article.slug || article.id}`}
+              href={getArticleUrl(article)}
               className="world-marquee-item"
               tabIndex={idx < worldNews.length ? 0 : -1}
             >

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useNews } from '../../context/NewsContext';
 import { uploadToCloudinary } from '../../Utils/cloudinary';
+import { getArticleSlug, getArticleUrl } from '../../Utils/articleUrl';
 
 export const AdminDashboard = ({ onLogout }) => {
   const { t } = useLanguage();
@@ -357,12 +358,11 @@ export const AdminDashboard = ({ onLogout }) => {
 
       const id = Date.now();
 
-      const slug = formData.titleEn
-        ? formData.titleEn
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/(^-|-$)/g, '')
-        : `article-${id}`;
+      const slug = getArticleSlug({
+        titleEn: formData.titleEn,
+        titleMr: formData.titleMr,
+        id
+      });
 
       // -----------------------------------------
       // Upload Featured Image to Cloudinary
@@ -1646,7 +1646,7 @@ export const AdminDashboard = ({ onLogout }) => {
                       )}
 
                       <a
-                        href={`/news/${art.slug || art.id}`}
+                        href={getArticleUrl(art)}
                         target="_blank"
                         rel="noreferrer"
                         className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs inline-block text-decoration-none transition-colors"

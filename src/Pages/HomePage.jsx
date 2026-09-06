@@ -1,3 +1,4 @@
+import { getArticleUrl } from '../Utils/articleUrl';
 import React, { useState, useEffect, useCallback } from "react";
 import { useNews } from "../context/NewsContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -266,7 +267,7 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
           {heroArticle && (
             <section className="group grid grid-cols-1 min-[850px]:grid-cols-[1.2fr_1fr] gap-0 min-[850px]:gap-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden mb-10 shadow-xs">
               <a
-                href={`/news/${heroArticle.slug || heroArticle.id}`}
+                href={getArticleUrl(heroArticle)}
                 className="relative block aspect-video overflow-hidden"
               >
                 {(heroArticle.featuredImage?.url || heroArticle.image?.url) && (
@@ -302,7 +303,7 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                 )}
                 <h1 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
                   <a
-                    href={`/news/${heroArticle.slug || heroArticle.id}`}
+                    href={getArticleUrl(heroArticle)}
                     className="text-gray-900 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-500 transition-colors"
                   >
                     {heroArticle.titleMr || heroArticle.title?.mr}
@@ -354,7 +355,7 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                     >
                       {/* Image */}
                       <a
-                        href={`/news/${article.slug || article.id}`}
+                        href={getArticleUrl(article)}
                         className="relative block h-[72px] sm:h-auto sm:aspect-video overflow-hidden bg-gray-100 dark:bg-gray-700 flex-shrink-0"
                       >
                         {imgUrl ? (
@@ -387,7 +388,7 @@ export const HomePage = ({ currentPath = window.location.pathname }) => {
                         )}
                         <h3 className="text-[11px] sm:text-base font-bold leading-snug mb-0 sm:mb-2">
                           <a
-                            href={`/news/${article.slug || article.id}`}
+                            href={getArticleUrl(article)}
                             className="text-gray-900 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-500 transition-colors line-clamp-2 sm:line-clamp-3"
                           >
                             {titleText}
