@@ -21,6 +21,11 @@ export const ArticlePage = () => {
   const pathParts = pathname.split(/\/(?:news|article)\//).filter(Boolean);
   const encodedArticleIdOrSlug = pathParts[pathParts.length - 1] || '';
   const articleIdOrSlug = decodeURIComponent(encodedArticleIdOrSlug);
+  const initialArticle = articles.find(
+    (art) => String(art.id) === String(articleIdOrSlug)
+      || art.slug === articleIdOrSlug
+      || getArticleSlug(art) === articleIdOrSlug
+  );
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -65,6 +70,7 @@ export const ArticlePage = () => {
   if (loadingArticle) {
     return (
       <div className="min-h-screen bg-[#1E2939] text-white flex items-center justify-center p-4">
+        <SEO article={initialArticle} isArticle={Boolean(initialArticle)} />
         <div className="inline-flex items-center gap-3 bg-zinc-900 border border-zinc-800 p-8 rounded-lg shadow-sm">
           <div className="animate-spin rounded-full h-8 w-8 border-4 border-red-600 border-t-transparent"></div>
           <span className="text-white font-medium">बातमी लोड केली जात आहे...</span>
@@ -76,6 +82,7 @@ export const ArticlePage = () => {
   if (!article) {
     return (
       <div className="min-h-screen bg-[#1E2939] text-white flex items-center justify-center p-4">
+        <SEO article={initialArticle} isArticle={Boolean(initialArticle)} />
         <div className="bg-zinc-900 p-8 sm:p-12 rounded-lg border border-zinc-800 max-w-lg mx-auto shadow-sm text-center">
           <span className="text-5xl block">📰</span>
           <h2 className="mt-4 text-2xl font-bold text-white">बातमी सापडली नाही</h2>

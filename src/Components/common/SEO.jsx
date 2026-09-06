@@ -1,12 +1,20 @@
 ﻿// src/components/SEO.jsx
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { getArticleSlug } from '../../Utils/articleUrl';
 
-const BASE_URL = 'https://https://palghardrushti.in';
+const BASE_URL = 'https://palghardrushti.in';
 const DEFAULT_TITLE = 'पालघर दृष्टी | महाराष्ट्रातील विश्वासार्ह बातमीपत्र';
 const DEFAULT_DESCRIPTION = 'राजकारण, गुन्हेगारी, शेती, क्रीडा आणि स्थानिक घडामोडींच्या ताज्या व अचूक बातम्या.';
 const DEFAULT_KEYWORDS = 'पालघर बातम्या, महाराष्ट्र बातम्या, Palghar News, Maharashtra News';
 const TWITTER_HANDLE = '@PalgharDrushti';
+
+const getSiteBaseUrl = () => {
+  if (typeof window !== 'undefined' && /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname)) {
+    return window.location.origin;
+  }
+  return BASE_URL;
+};
 
 const truncateDescription = (text, maxLength = 160) => {
   if (!text || typeof text !== 'string') return '';
@@ -58,7 +66,7 @@ export const SEO = ({
   // Resolve non-article titles and descriptions with clean fallback hierarchy
   const rawTitle = title || article?.titleMr || DEFAULT_TITLE;
   const rawDescription = description || article?.summaryMr || article?.contentMr || DEFAULT_DESCRIPTION;
-  const slug = article?.slug || article?.id || '';
+  const slug = article ? getArticleSlug(article) : '';
   
   const metaTitle = article?.metaTitle || (isArticle && article?.titleMr ? `${rawTitle} | पालघर दृष्टी` : rawTitle);
   const metaDescription = truncateDescription(article?.metaDescription || rawDescription, 160);
@@ -66,11 +74,12 @@ export const SEO = ({
   const resolvedFocusKeyword = article?.focusKeyword || focusKeyword;
   const keywords = resolvedFocusKeyword ? `${resolvedFocusKeyword}, ${DEFAULT_KEYWORDS}` : DEFAULT_KEYWORDS;
 
-  const imageUrl = getValidImageUrl(article?.featuredImage?.url, BASE_URL);
+  const siteBaseUrl = getSiteBaseUrl();
+  const imageUrl = getValidImageUrl(article?.featuredImage?.url, siteBaseUrl);
   
-  const currentPath = path || (slug ? `/news/${slug}` : '');
-  const url = `${BASE_URL}${currentPath}`;
-  const resolvedCanonicalUrl = article?.canonicalUrl || canonicalUrl || url;
+  const currentPath = path || (slug ? `/news/${encodeURIComponent(slug)}` : '');
+  const url = `${siteBaseUrl}${currentPath}`;
+  const resolvedCanonicalUrl = isArticle && article ? url : canonicalUrl || url;
 
   const robotsDirective = (article?.noIndex ?? noIndex)
     ? 'noindex, nofollow'
