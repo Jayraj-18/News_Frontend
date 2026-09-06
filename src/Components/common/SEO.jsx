@@ -2,7 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-const BASE_URL = 'https://palghardrushti.netlify.app';
+const BASE_URL = 'https://https://palghardrushti.in';
 const DEFAULT_TITLE = 'पालघर दृष्टी | महाराष्ट्रातील विश्वासार्ह बातमीपत्र';
 const DEFAULT_DESCRIPTION = 'राजकारण, गुन्हेगारी, शेती, क्रीडा आणि स्थानिक घडामोडींच्या ताज्या व अचूक बातम्या.';
 const DEFAULT_KEYWORDS = 'पालघर बातम्या, महाराष्ट्र बातम्या, Palghar News, Maharashtra News';

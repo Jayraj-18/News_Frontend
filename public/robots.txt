@@ -4,4 +4,4 @@ User-agent: *
 Allow: /
 
 # Direct crawlers to your dynamic sitemap
-Sitemap: https://palghardrushti.netlify.app/sitemap.xml
+Sitemap: https://palghardrushti.in//sitemap.xml
