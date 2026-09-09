@@ -115,6 +115,14 @@ export const ArticlePage = () => {
   const publishedDate = article?.publishedAt || article?.createdAt || new Date().toISOString();
   const readingTime = 7;
   const galleryImages = article?.galleryImages || [];
+  const relatedArticles = articles
+    .filter((relatedArticle) => (
+      relatedArticle.category === article.category
+      && String(relatedArticle.id) !== String(article.id)
+      && getArticleUrl(relatedArticle) !== getArticleUrl(article)
+    ))
+    .sort((first, second) => new Date(second.publishedAt || second.createdAt || 0) - new Date(first.publishedAt || first.createdAt || 0))
+    .slice(0, 3);
 
   return (
     <div className="min-h-screen bg-[#1E2939] text-white py-1">
@@ -269,10 +277,7 @@ export const ArticlePage = () => {
                 </div>
               </div>
 
-              {/* Advertisement Placeholder */}
-              <div className="h-64 bg-zinc-900 border border-dashed border-zinc-800 flex items-center justify-center text-xs text-zinc-500 rounded">
-                <span>जाहिरात (Advertisement)</span>
-              </div>
+           
             </div>
           </aside>
         </div>
@@ -291,6 +296,54 @@ export const ArticlePage = () => {
             </p>
           </div>
         </section>
+
+        {relatedArticles.length > 0 && (
+          <section className="mt-10" aria-labelledby="related-articles-heading">
+            <div className="flex items-center gap-3 mb-5">
+              <h2 id="related-articles-heading" className="text-xl sm:text-2xl font-bold border-l-4 border-red-600 pl-3 text-white">
+                {t(`categories.${article.category}`) || article.category} मधील आणखी बातम्या
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {relatedArticles.map((relatedArticle) => {
+                const relatedTitle = relatedArticle.titleMr
+                  || (typeof relatedArticle.title === 'object'
+                    ? (relatedArticle.title?.[lang] || relatedArticle.title?.mr)
+                    : relatedArticle.title)
+                  || 'शीर्षक नाही';
+                const relatedImage = relatedArticle.featuredImage?.url || relatedArticle.image?.url || '';
+
+                return (
+                  <article key={relatedArticle.id} className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden group">
+                    <a href={getArticleUrl(relatedArticle)} className="block no-underline">
+                      {relatedImage && (
+                        <img
+                          src={getOptimizedImageUrl(relatedImage, { width: 420, height: 236 })}
+                          srcSet={getResponsiveImageSrcSet(relatedImage, [240, 420], 236)}
+                          sizes="(min-width: 640px) 33vw, 100vw"
+                          alt={relatedTitle}
+                          loading="lazy"
+                          width="420"
+                          height="236"
+                          className="w-full aspect-video object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      )}
+                      <div className="p-4">
+                        <span className="text-xs font-semibold text-red-400">
+                          {t(`categories.${relatedArticle.category}`) || relatedArticle.category}
+                        </span>
+                        <h3 className="mt-2 text-base font-bold leading-snug text-white group-hover:text-red-400 transition-colors">
+                          {relatedTitle}
+                        </h3>
+                      </div>
+                    </a>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
       </article>
     </div>
   );
