@@ -1,12 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { useLanguage } from '../../context/LanguageContext';
 import { useNews } from '../../context/NewsContext';
 import { uploadToCloudinary } from '../../Utils/cloudinary';
 import { getArticleSlug, getArticleUrl } from '../../Utils/articleUrl';
 
 export const AdminDashboard = ({ onLogout }) => {
-  const { t } = useLanguage();
-  const { articles, addArticle, updateArticle, deleteArticle } = useNews();
+  const {
+    articles,
+    addArticle,
+    updateArticle,
+    deleteArticle,
+    getArticleByIdOrSlug
+  } = useNews();
 
   const fileInputRef = useRef(null);
   const multiFileInputRef = useRef(null);
@@ -39,6 +43,9 @@ export const AdminDashboard = ({ onLogout }) => {
   // -----------------------------------------
 
   const [formData, setFormData] = useState(initialFormState);
+  const [editingArticleId, setEditingArticleId] = useState(null);
+  const [editingArticle, setEditingArticle] = useState(null);
+  const [loadingArticle, setLoadingArticle] = useState(false);
 
   // -----------------------------------------
   // Image Management State
@@ -54,6 +61,81 @@ export const AdminDashboard = ({ onLogout }) => {
 
   // Cloudinary upload state
   const [uploading, setUploading] = useState(false);
+
+  const toDateTimeLocal = (value) => {
+    if (!value) return '';
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+
+    const offset = date.getTimezoneOffset() * 60000;
+    return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+  };
+
+  const startEditing = async (article) => {
+    try {
+      setLoadingArticle(true);
+
+      const fullArticle = await getArticleByIdOrSlug(article.id);
+      const source = fullArticle || article;
+      const featured = source.featuredImage || source.image;
+      const gallery = Array.isArray(source.galleryImages)
+        ? source.galleryImages
+        : [];
+
+      setFormData({
+        ...initialFormState,
+        titleMr: source.titleMr || source.title?.mr || '',
+        titleEn: source.titleEn || source.title?.en || '',
+        summaryMr: source.summaryMr || source.summary?.mr || '',
+        metaTitle: source.metaTitle || '',
+        metaDescription: source.metaDescription || '',
+        focusKeyword: source.focusKeyword || '',
+        canonicalUrl: source.canonicalUrl || '',
+        noIndex: Boolean(source.noIndex),
+        category: source.category || 'politics',
+        isBreaking: Boolean(source.isBreaking),
+        isHero: Boolean(source.isHero),
+        contentMr: source.contentMr || source.content?.mr || '',
+        tags: Array.isArray(source.tags)
+          ? source.tags.join(', ')
+          : source.tags || '',
+        scheduledTime: toDateTimeLocal(source.publishedAt),
+        status: source.status || 'draft'
+      });
+
+      setFeaturedImage(
+        featured?.url
+          ? {
+              id: `${source.id}-featured`,
+              url: featured.url,
+              name: 'Existing featured image',
+              size: '',
+              alt: featured.alt || '',
+              caption: featured.caption || '',
+              credit: featured.credit || ''
+            }
+          : null
+      );
+
+      setGalleryImages(
+        gallery.map((image, index) => ({
+          ...image,
+          id: image.id || `${source.id}-gallery-${index}`,
+          name: image.name || `Gallery image ${index + 1}`,
+          size: image.size || ''
+        }))
+      );
+      setEditingArticle(source);
+      setEditingArticleId(source.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Failed to load article for editing:', error);
+      alert(error.message || 'बातमी संपादनासाठी उघडता आली नाही.');
+    } finally {
+      setLoadingArticle(false);
+    }
+  };
 
   // -----------------------------------------
   // Generic Form Field Handler
@@ -241,6 +323,8 @@ export const AdminDashboard = ({ onLogout }) => {
 
   const resetForm = () => {
     setFormData(initialFormState);
+    setEditingArticleId(null);
+    setEditingArticle(null);
 
     setFeaturedImage(null);
     setGalleryImages([]);
@@ -299,6 +383,14 @@ export const AdminDashboard = ({ onLogout }) => {
 
     for (const image of galleryImages) {
       if (!image.file) {
+        if (image.url) {
+          uploadedImages.push({
+            url: image.url,
+            alt: image.alt?.trim() || '',
+            caption: image.caption?.trim() || '',
+            credit: image.credit?.trim() || ''
+          });
+        }
         continue;
       }
 
@@ -356,7 +448,7 @@ export const AdminDashboard = ({ onLogout }) => {
       // Generate ID and Slug
       // -----------------------------------------
 
-      const id = Date.now();
+      const id = editingArticleId || Date.now();
 
       const slug = getArticleSlug({
         titleEn: formData.titleEn,
@@ -401,7 +493,9 @@ export const AdminDashboard = ({ onLogout }) => {
       // use Cloudinary image.
       // Otherwise use default image.
       const imgObj =
-        uploadedFeaturedImage || defaultImage;
+        uploadedFeaturedImage ||
+        (editingArticle?.featuredImage || editingArticle?.image) ||
+        defaultImage;
 
       // -----------------------------------------
       // Article Payload
@@ -532,11 +626,16 @@ export const AdminDashboard = ({ onLogout }) => {
         // -----------------------------------------
 
         author: {
-          name: 'पालघर दृष्टी',
+          name:
+            editingArticle?.author?.name ||
+            'पालघर दृष्टी',
 
-          role: 'संपेडक टीम',
+          role:
+            editingArticle?.author?.role ||
+            'संपेडक टीम',
 
           avatar:
+            editingArticle?.author?.avatar ||
             'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=96&h=96&q=75'
         },
 
@@ -552,6 +651,7 @@ export const AdminDashboard = ({ onLogout }) => {
             : new Date().toISOString(),
 
         createdAt:
+          editingArticle?.createdAt ||
           new Date().toISOString(),
 
         // -----------------------------------------
@@ -582,14 +682,20 @@ export const AdminDashboard = ({ onLogout }) => {
       // Save Article
       // -----------------------------------------
 
-      await addArticle(payload);
+      if (editingArticleId) {
+        await updateArticle(editingArticleId, payload);
+      } else {
+        await addArticle(payload);
+      }
 
       alert(
-        `बातमी ${
-          statusType === 'published'
-            ? 'प्रकाशित'
-            : 'ड्राफ्ट मध्ये जतन'
-        } झाली!`
+        editingArticleId
+          ? 'बातमी यशस्वीरित्या अपडेट झाली!'
+          : `बातमी ${
+              statusType === 'published'
+                ? 'प्रकाशित'
+                : 'ड्राफ्ट मध्ये जतन'
+            } झाली!`
       );
 
       resetForm();
@@ -601,11 +707,11 @@ export const AdminDashboard = ({ onLogout }) => {
       );
 
       alert(
-        `बातमी ${
+        `${editingArticleId ? 'बातमी अपडेट' : `बातमी ${
           statusType === 'published'
             ? 'प्रकाशित'
             : 'ड्राफ्ट मध्ये जतन'
-        } झाली नाही.\n${
+        }`} झाली नाही.\n${
           error.message ||
           'कृपया पुन्हा प्रयत्न करा.'
         }`
@@ -654,7 +760,9 @@ export const AdminDashboard = ({ onLogout }) => {
             </h1>
 
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              नवीन बातमी तयार करा, फोटो अपलोड करा आणि प्रकाशित करा.
+              {editingArticleId
+                ? 'बातमीतील कोणतेही क्षेत्र बदला आणि अपडेट करा.'
+                : 'नवीन बातमी तयार करा, फोटो अपलोड करा आणि प्रकाशित करा.'}
             </p>
 
           </div>
@@ -674,6 +782,16 @@ export const AdminDashboard = ({ onLogout }) => {
               }}
             >
               🚪 लॉगआउट (Logout)
+            </button>
+          )}
+
+          {editingArticleId && (
+            <button
+              type="button"
+              className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold rounded-md transition-colors"
+              onClick={resetForm}
+            >
+              नवीन बातमी (Cancel Edit)
             </button>
           )}
 
@@ -1393,31 +1511,39 @@ export const AdminDashboard = ({ onLogout }) => {
 
               <button
                 type="button"
-                disabled={uploading}
+                disabled={uploading || loadingArticle}
                 className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={() =>
                   handleSubmit('published')
                 }
               >
 
-                {uploading
+                {loadingArticle
+                  ? '⏳ बातमी लोड होत आहे...'
+                  : uploading
                   ? '⏳ फोटो अपलोड होत आहेत...'
-                  : '🚀 आताच प्रकाशित करा (Publish Now)'}
+                  : editingArticleId
+                    ? '✅ बातमी अपडेट करा (Update Article)'
+                    : '🚀 आताच प्रकाशित करा (Publish Now)'}
 
               </button>
 
               <button
                 type="button"
-                disabled={uploading}
+                disabled={uploading || loadingArticle}
                 className="w-full py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-md transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={() =>
                   handleSubmit('draft')
                 }
               >
 
-                {uploading
+                {loadingArticle
+                  ? '⏳ बातमी लोड होत आहे...'
+                  : uploading
                   ? '⏳ कृपया प्रतीक्षा करा...'
-                  : '💾 ड्राफ्ट जतन करा (Save Draft)'}
+                  : editingArticleId
+                    ? '💾 अपडेट ड्राफ्ट (Save Update)'
+                    : '💾 ड्राफ्ट जतन करा (Save Draft)'}
 
               </button>
 
@@ -1605,6 +1731,15 @@ export const AdminDashboard = ({ onLogout }) => {
                     </td>
 
                     <td className="p-3 flex items-center gap-2">
+
+                      <button
+                        type="button"
+                        disabled={loadingArticle}
+                        className="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded text-xs transition-colors disabled:opacity-50"
+                        onClick={() => startEditing(art)}
+                      >
+                        ✏️ संपादित करा
+                      </button>
 
                       {art.status ===
                       'draft' ? (
