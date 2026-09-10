@@ -109,8 +109,8 @@ export const ArticlePage = () => {
   const authorName = 'पालघर दृष्टी';
   const authorRole = article?.author?.role || 'Sampadak (Editor)';
   
-  // Set /one.webp from the public folder as default when article avatar isn't specified
-  const authorAvatar = article?.author?.avatar || '/one.webp';
+  // Use the publication logo for the shared editorial author profile.
+  const authorAvatar = '/one.webp';
   
   const publishedDate = article?.publishedAt || article?.createdAt || new Date().toISOString();
   const readingTime = 7;
