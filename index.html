@@ -4,33 +4,48 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#C62828" />
- 
-    <meta name="google-adsense-account" content="ca-pub-4377452079045358">
+
+    <meta name="google-adsense-account" content="ca-pub-4377452079045358" />
+
+    <!-- Google AdSense Official Script -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4377452079045358"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Google Tag Manager / Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4PZY7QE1MV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-4PZY7QE1MV');
+    </script>
+
     <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
     <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin="anonymous" />
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous" />
 
     <style>
-      html, body, #root { min-height: 100%; }
-      body { margin: 0; background: #0f172a; color: #f8fafc; }
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+      body {
+        margin: 0;
+        background: #0f172a;
+        color: #f8fafc;
+      }
     </style>
-    <!-- ═══ FONT PERFORMANCE: preconnect early ═══════════════════════════════
-         Two unique preconnect hints (remove duplicates from old code).
-         crossorigin is required on fonts.gstatic.com so the CORS preflight
-         is cached before the font files are fetched.                       -->
+
+    <!-- Font Performance Optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- ═══ FONT PERFORMANCE: async non-render-blocking load ════════════════
-         Strategy: media="print" + onload trick.
-         The browser downloads the stylesheet off the critical path (like a
-         preload), then onload swaps it to media="all" making it active.
-         Only the weights we actually use are requested.
-         &display=swap  → font-display:swap, avoids FOIT.
-         Fonts are grouped into ONE request per family to minimise RTTs.    -->
-
-    <!-- 1. Noto Sans Devanagari — body & UI copy (wght 400-700 variable) -->
+    <!-- 1. Noto Sans Devanagari -->
     <link
       id="font-noto"
       rel="stylesheet"
@@ -39,7 +54,7 @@
       onload="this.media='all'"
     />
 
-    <!-- 2. Mukta — secondary body / captions (wght 400;600) -->
+    <!-- 2. Mukta -->
     <link
       id="font-mukta"
       rel="stylesheet"
@@ -48,7 +63,7 @@
       onload="this.media='all'"
     />
 
-    <!-- 3. Tiro Devanagari Marathi — display / headings (400 only, italic optional) -->
+    <!-- 3. Tiro Devanagari Marathi -->
     <link
       id="font-tiro"
       rel="stylesheet"
@@ -57,7 +72,7 @@
       onload="this.media='all'"
     />
 
-    <!-- 4. Inter — latin UI labels (wght 400;500;600;700) -->
+    <!-- 4. Inter -->
     <link
       id="font-inter"
       rel="stylesheet"
@@ -66,53 +81,13 @@
       onload="this.media='all'"
     />
 
-    <!-- ═══ NOSCRIPT fallback (JS-disabled browsers) ════════════════════════ -->
+    <!-- NOSCRIPT fallback -->
     <noscript>
       <link
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@400;600&family=Tiro+Devanagari+Marathi&family=Inter:wght@400;500;600;700&display=swap"
       />
     </noscript>
-    
-    <!-- Defer third-party scripts until after the initial render to keep LCP/FCP healthy. -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      window.loadAnalytics = function () {
-        if (window.analyticsLoaded) return;
-        window.analyticsLoaded = true;
-        window.gtag = function () { window.dataLayer.push(arguments); };
-        window.gtag('js', new Date());
-        window.gtag('config', 'G-4PZY7QE1MV');
-        var script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4PZY7QE1MV';
-        document.head.appendChild(script);
-      };
-
-      window.loadAds = function () {
-        if (window.adsLoaded) return;
-        window.adsLoaded = true;
-        var script = document.createElement('script');
-        script.async = true;
-        script.defer = true;
-        script.crossOrigin = 'anonymous';
-        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4377452079045358';
-        document.head.appendChild(script);
-      };
-
-      var triggerLateThirdPartyLoads = function () {
-        window.loadAnalytics();
-        window.loadAds();
-      };
-
-      ['click', 'scroll', 'keydown', 'touchstart'].forEach(function (eventName) {
-        window.addEventListener(eventName, triggerLateThirdPartyLoads, { once: true, passive: true });
-      });
-
-      window.addEventListener('load', function () {
-        window.setTimeout(triggerLateThirdPartyLoads, 1500);
-      }, { once: true });
-    </script>
   </head>
   <body>
     <div id="root"></div>
