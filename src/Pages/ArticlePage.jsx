@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { getOptimizedImageUrl, getResponsiveImageSrcSet } from '../Utils/imageUrl';
 import { useNews } from '../context/NewsContext';
@@ -8,16 +8,17 @@ import { getArticleSlug, getArticleUrl } from '../Utils/articleUrl';
 
 export const ArticlePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { lang, t } = useLanguage();
   const { getArticleByIdOrSlug, articles } = useNews();
-  
+
   const [article, setArticle] = useState(null);
   const [loadingArticle, setLoadingArticle] = useState(true);
   const [fontSizeOffset] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   // Support the new slug route and legacy article links.
-  const pathname = window.location.pathname;
+  const pathname = location.pathname;
   const pathParts = pathname.split(/\/(?:news|article)\//).filter(Boolean);
   const encodedArticleIdOrSlug = pathParts[pathParts.length - 1] || '';
   const articleIdOrSlug = decodeURIComponent(encodedArticleIdOrSlug);
@@ -170,13 +171,14 @@ export const ArticlePage = () => {
           {/* Meta Information Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-y border-zinc-800 py-4 my-6">
             <div className="flex items-center gap-3">
-              <img 
-                src={getOptimizedImageUrl(authorAvatar, { width: 96, height: 96 })} 
+              <img
+                src={getOptimizedImageUrl(authorAvatar, { width: 96, height: 96 })}
                 srcSet={getResponsiveImageSrcSet(authorAvatar, [48, 96], 96)}
                 sizes="44px"
-                alt={authorName} 
-                className="w-11 h-11 rounded-full object-cover border border-zinc-700" 
-                loading="lazy" 
+                alt={authorName}
+                className="w-11 h-11 rounded-full object-cover border border-zinc-700"
+                loading="lazy"
+                decoding="async"
               />
               <div>
                 <strong className="block text-sm font-bold text-white">{authorName}</strong>
@@ -196,18 +198,21 @@ export const ArticlePage = () => {
         {/* Featured Hero Image */}
         {imageUrl && (
           <figure className="mb-8">
-            <img 
-              src={getOptimizedImageUrl(imageUrl, { width: 1200, height: 675 })} 
-              srcSet={getResponsiveImageSrcSet(imageUrl, [640, 900, 1200], 675)}
-              sizes="(min-width: 1100px) 1100px, 100vw"
-              alt={articleTitle} 
-              width="1200" 
+            <img
+              src={getOptimizedImageUrl(imageUrl, { width: 1200, height: 675 })}
+              srcSet={getResponsiveImageSrcSet(imageUrl, [400, 640, 900, 1200], 675)}
+              sizes="(max-width: 640px) 100vw, (max-width: 1100px) 92vw, 1100px"
+              alt={articleTitle}
+              width="1200"
               height="675"
               loading="eager"
-              className="w-full rounded-md object-cover aspect-video border border-zinc-800"
+              fetchPriority="high"
+              decoding="async"
+              className="w-full rounded-md border border-zinc-800 bg-zinc-900 object-cover"
+              style={{ aspectRatio: '16 / 9' }}
             />
             {(imageCaption || imageCredit) && (
-              <figcaption className="flex justify-between items-center text-xs text-zinc-400 mt-2 px-1">
+              <figcaption className="flex flex-col gap-1 text-xs text-zinc-400 mt-2 px-1 sm:flex-row sm:items-center sm:justify-between">
                 <span>{imageCaption}</span>
                 {imageCredit && <span className="font-semibold text-zinc-300">{imageCredit}</span>}
               </figcaption>
@@ -284,10 +289,14 @@ export const ArticlePage = () => {
 
         {/* Author Bio Section */}
         <section className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 p-6 rounded-lg mt-12">
-          <img 
-            src={authorAvatar} 
-            alt={authorName} 
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shrink-0 border border-zinc-700" 
+          <img
+            src={getOptimizedImageUrl(authorAvatar, { width: 160, height: 160 })}
+            srcSet={getResponsiveImageSrcSet(authorAvatar, [80, 160], 160)}
+            sizes="(max-width: 640px) 64px, 80px"
+            alt={authorName}
+            loading="lazy"
+            decoding="async"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shrink-0 border border-zinc-700"
           />
           <div>
             <h3 className="text-lg font-bold text-white mb-1">{authorName}</h3>

@@ -6,9 +6,11 @@
     <meta name="theme-color" content="#C62828" />
  
     <meta name="google-adsense-account" content="ca-pub-4377452079045358">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4377452079045358"
-     crossorigin="anonymous"></script>
-   
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous" />
+
     <style>
       html, body, #root { min-height: 100%; }
       body { margin: 0; background: #0f172a; color: #f8fafc; }
@@ -72,7 +74,7 @@
       />
     </noscript>
     
-    <!-- Load analytics after the first view or on user interaction. -->
+    <!-- Defer third-party scripts until after the initial render to keep LCP/FCP healthy. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       window.loadAnalytics = function () {
@@ -86,10 +88,30 @@
         script.src = 'https://www.googletagmanager.com/gtag/js?id=G-4PZY7QE1MV';
         document.head.appendChild(script);
       };
+
+      window.loadAds = function () {
+        if (window.adsLoaded) return;
+        window.adsLoaded = true;
+        var script = document.createElement('script');
+        script.async = true;
+        script.defer = true;
+        script.crossOrigin = 'anonymous';
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4377452079045358';
+        document.head.appendChild(script);
+      };
+
+      var triggerLateThirdPartyLoads = function () {
+        window.loadAnalytics();
+        window.loadAds();
+      };
+
       ['click', 'scroll', 'keydown', 'touchstart'].forEach(function (eventName) {
-        window.addEventListener(eventName, window.loadAnalytics, { once: true, passive: true });
+        window.addEventListener(eventName, triggerLateThirdPartyLoads, { once: true, passive: true });
       });
-      window.setTimeout(window.loadAnalytics, 10000);
+
+      window.addEventListener('load', function () {
+        window.setTimeout(triggerLateThirdPartyLoads, 1500);
+      }, { once: true });
     </script>
   </head>
   <body>
