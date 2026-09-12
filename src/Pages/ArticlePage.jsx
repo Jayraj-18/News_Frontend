@@ -173,7 +173,7 @@ export const ArticlePage = () => {
             <div className="flex items-center gap-3">
               <img
                 src={getOptimizedImageUrl(authorAvatar, { width: 96, height: 96 })}
-                srcSet={getResponsiveImageSrcSet(authorAvatar, [48, 96], 96)}
+                srcSet={getResponsiveImageSrcSet(authorAvatar, [32, 48, 64, 96], 96)}
                 sizes="44px"
                 alt={authorName}
                 className="w-11 h-11 rounded-full object-cover border border-zinc-700"
@@ -199,9 +199,9 @@ export const ArticlePage = () => {
         {imageUrl && (
           <figure className="mb-8">
             <img
-              src={getOptimizedImageUrl(imageUrl, { width: 1200, height: 675 })}
-              srcSet={getResponsiveImageSrcSet(imageUrl, [400, 640, 900, 1200], 675)}
-              sizes="(max-width: 640px) 100vw, (max-width: 1100px) 92vw, 1100px"
+              src={getOptimizedImageUrl(imageUrl, { width: 960, height: 540 })}
+              srcSet={getResponsiveImageSrcSet(imageUrl, [320, 480, 640, 960, 1200], 675)}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, 1100px"
               alt={articleTitle}
               width="1200"
               height="675"
@@ -290,8 +290,8 @@ export const ArticlePage = () => {
         {/* Author Bio Section */}
         <section className="flex items-center gap-4 bg-zinc-900 border border-zinc-800 p-6 rounded-lg mt-12">
           <img
-            src={getOptimizedImageUrl(authorAvatar, { width: 160, height: 160 })}
-            srcSet={getResponsiveImageSrcSet(authorAvatar, [80, 160], 160)}
+            src={getOptimizedImageUrl(authorAvatar, { width: 128, height: 128 })}
+            srcSet={getResponsiveImageSrcSet(authorAvatar, [32, 48, 64, 80, 128], 128)}
             sizes="(max-width: 640px) 64px, 80px"
             alt={authorName}
             loading="lazy"
