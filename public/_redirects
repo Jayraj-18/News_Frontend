@@ -7,5 +7,8 @@
     # 3. Proxy API calls to Render backend
     /api/*                                 https://news-backend-sqmg.onrender.com/api/:splat   200
 
-    # 4. Single Page Application (SPA) fallback route
+    # 4. Proxy RSS feed before the SPA fallback
+    /rss.xml                               https://news-backend-sqmg.onrender.com/rss.xml    200
+
+    # 5. Single Page Application (SPA) fallback route
     /*                                     /index.html   200
