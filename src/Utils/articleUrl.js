@@ -1,14 +1,14 @@
 export const slugify = (value) => String(value || '')
   .normalize('NFKD')
-  .replace(/[^\p{L}\p{M}\p{N}\s-]/gu, '')
-  .trim()
-  .replace(/[\s-]+/g, '-')
-  .toLowerCase();
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '')
+  .replace(/-{2,}/g, '-');
 
 export const getArticleSlug = (article = {}) => {
   const storedSlug = String(article.slug || '');
-  return slugify(article.titleMr || article.titleEn)
-    || (storedSlug && !/^article-\d+$/.test(storedSlug) ? storedSlug : '')
+  return (storedSlug && !/^article-\d+$/.test(storedSlug) ? slugify(storedSlug) : '')
+    || slugify(article.titleMr || article.titleEn)
     || String(article.id || '');
 };
 

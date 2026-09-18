@@ -78,9 +78,8 @@ export const SEO = ({
   const imageUrl = getValidImageUrl(article?.featuredImage?.url, siteBaseUrl);
   
   const currentPath = path || (slug ? `/news/${encodeURIComponent(slug)}` : '');
-  const url = `${siteBaseUrl}${currentPath}`;
-  const isValidCanonical = article?.canonicalUrl && /^https?:\/\/[^\s]+$/.test(article.canonicalUrl);
-const resolvedCanonicalUrl = isValidCanonical ? article.canonicalUrl : (isArticle && article ? url : canonicalUrl || url);
+  const url = `${isArticle ? BASE_URL : siteBaseUrl}${currentPath}`;
+  const resolvedCanonicalUrl = isArticle && article ? url : canonicalUrl || url;
 
   const robotsDirective = (article?.noIndex ?? noIndex)
     ? 'noindex, nofollow'

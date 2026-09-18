@@ -26,7 +26,7 @@ export const AdminDashboard = ({ onLogout }) => {
     metaTitle: '',
     metaDescription: '',
     focusKeyword: '',
-    canonicalUrl: '',
+    slug: '',
     noIndex: false,
     category: 'politics',
     isBreaking: false,
@@ -91,7 +91,7 @@ export const AdminDashboard = ({ onLogout }) => {
         metaTitle: source.metaTitle || '',
         metaDescription: source.metaDescription || '',
         focusKeyword: source.focusKeyword || '',
-        canonicalUrl: source.canonicalUrl || '',
+        slug: source.slug || '',
         noIndex: Boolean(source.noIndex),
         category: source.category || 'politics',
         isBreaking: Boolean(source.isBreaking),
@@ -146,7 +146,7 @@ export const AdminDashboard = ({ onLogout }) => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : name === 'slug' ? value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') : value
     }));
   };
 
@@ -450,7 +450,7 @@ export const AdminDashboard = ({ onLogout }) => {
 
       const id = editingArticleId || Date.now();
 
-      const slug = getArticleSlug({
+      const slug = formData.slug || getArticleSlug({
         titleEn: formData.titleEn,
         titleMr: formData.titleMr,
         id
@@ -550,9 +550,6 @@ export const AdminDashboard = ({ onLogout }) => {
 
         focusKeyword:
           formData.focusKeyword.trim(),
-
-        canonicalUrl:
-          formData.canonicalUrl.trim(),
 
         noIndex:
           Boolean(formData.noIndex),
@@ -988,26 +985,31 @@ export const AdminDashboard = ({ onLogout }) => {
 
               </div>
 
-              {/* Canonical */}
+              {/* Slug */}
 
               <div className="flex flex-col mb-4">
 
                 <label
-                  htmlFor="canonicalUrl"
+                  htmlFor="slug"
                   className="font-semibold text-sm mb-1 text-gray-800 dark:text-gray-200"
                 >
-                  Canonical URL (Optional)
+                  Slug
                 </label>
 
                 <input
-                  type="url"
-                  id="canonicalUrl"
-                  name="canonicalUrl"
-                  placeholder="रिक्त ठेवल्यास बातमीच्या URL वरून तयार होईल"
-                  value={formData.canonicalUrl}
+                  type="text"
+                  id="slug"
+                  name="slug"
+                  placeholder="abc-xyz"
+                  pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+                  value={formData.slug}
                   onChange={handleInputChange}
                   className="p-2.5 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+
+                <span className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  https://palghardrushti.in/news/{formData.slug || 'abc-xyz'}
+                </span>
 
               </div>
 
